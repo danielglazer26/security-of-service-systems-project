@@ -72,24 +72,20 @@ public class AccountController {
                     BCrypt.hashpw(registerRequest.password(), BCrypt.gensalt()),
                     registerRequest.email()
             );
-            return checkUserCreation(login, newUser);
+            return checkUserCreation(newUser);
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseJsonBody("This login exist: " + login));
     }
 
-    private ResponseEntity<ResponseJsonBody> checkUserCreation(String login, Optional<Person> newUser) {
-        if (newUser.isPresent()) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Location", generateQRUrl(newUser.get()));
-            return new ResponseEntity<>(new ResponseJsonBody("Create user " + login), headers, HttpStatus.OK);
-        } else {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseJsonBody("Error occurs when add new user to database"));
-        }
+    private ResponseEntity<ResponseJsonBody> checkUserCreation(Optional<Person> newUser) {
+        return newUser.map(person -> ResponseEntity.ok(new ResponseJsonBody(generateQRUrl(person))))
+                .orElseGet(() -> ResponseEntity
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(new ResponseJsonBody("Error occurs when add new user to database"))
+                );
     }
 
-    public String generateQRUrl(Person person) {
+    private String generateQRUrl(Person person) {
         return QR_PREFIX + URLEncoder.encode(
                 String.format("otpauth://totp/%s:%s?secret=%s&issuer=%s",
                         "NAME1",
