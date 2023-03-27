@@ -2,6 +2,7 @@ package bednarz.glazer.sakowicz.sso.system.database.services;
 
 
 import bednarz.glazer.sakowicz.sso.system.database.model.Person;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +12,9 @@ import java.util.List;
 
 public class AccountData implements UserDetails {
 
+    @Getter
     private final Person person;
+
     private final Collection<? extends GrantedAuthority> authorities;
 
     public AccountData(Person person) {
@@ -52,9 +55,5 @@ public class AccountData implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public Person getPerson() {
-        return person;
     }
 }

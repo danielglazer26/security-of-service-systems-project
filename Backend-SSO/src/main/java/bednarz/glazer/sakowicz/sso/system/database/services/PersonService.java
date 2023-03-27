@@ -1,11 +1,13 @@
 package bednarz.glazer.sakowicz.sso.system.database.services;
 
 
+import bednarz.glazer.sakowicz.sso.system.controller.requests.RegisterRequest;
 import bednarz.glazer.sakowicz.sso.system.database.model.Person;
 import bednarz.glazer.sakowicz.sso.system.database.model.Roles;
 import bednarz.glazer.sakowicz.sso.system.database.repositories.PersonRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,13 +24,21 @@ public class PersonService {
         this.personRepository = personRepository;
     }
 
+    public Optional<Person> createNewPerson(RegisterRequest registerRequest) {
+        return createNewPerson(registerRequest.login(), registerRequest.password(), registerRequest.email());
+    }
+
     public Optional<Person> createNewPerson(String login, String password, String email) {
         Optional<Person> optionalPerson = personRepository.findByLogin(login);
         if (optionalPerson.isEmpty()) {
-            return Optional.of(personRepository.save(new Person(0L, login, password, email, Roles.USER)));
+            return Optional.of(personRepository.save(new Person(login, generateHash(password), email, Roles.USER)));
         } else {
             return Optional.empty();
         }
+    }
+
+    private static String generateHash(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
     public Optional<Person> getPersonByLogin(String login) {
@@ -44,7 +54,7 @@ public class PersonService {
     }
 
     public List<Person> getAllUsers() {
-        return personRepository.getAllUsers();
+        return personRepository.findByRole(Roles.USER);
     }
 
     public void removePerson(Person person) {

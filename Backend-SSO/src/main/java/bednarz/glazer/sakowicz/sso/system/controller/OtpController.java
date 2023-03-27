@@ -1,11 +1,11 @@
 package bednarz.glazer.sakowicz.sso.system.controller;
 
 import bednarz.glazer.sakowicz.sso.system.connection.settings.jwt.CookieManager;
+import bednarz.glazer.sakowicz.sso.system.connection.settings.otp.OtpManager;
 import bednarz.glazer.sakowicz.sso.system.controller.requests.ResponseJsonBody;
 import bednarz.glazer.sakowicz.sso.system.database.model.Person;
 import bednarz.glazer.sakowicz.sso.system.database.services.AccountData;
 import jakarta.servlet.http.HttpServletRequest;
-import org.jboss.aerogear.security.otp.Totp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -19,12 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/authorization/otp")
 public class OtpController {
-
     private final CookieManager cookieManager;
+    private final OtpManager otpManager;
 
     @Autowired
-    public OtpController(CookieManager cookieManager) {
+    public OtpController(CookieManager cookieManager, OtpManager otpManager) {
         this.cookieManager = cookieManager;
+        this.otpManager = otpManager;
     }
 
     @PostMapping("/login")
@@ -32,9 +33,7 @@ public class OtpController {
         AccountData accountData = (AccountData) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Person otpUser = accountData.getPerson();
-        Totp totp = new Totp(otpUser.getSecret());
-
-        if (checkOtpValidation(verificationCode, totp)) {
+        if (otpManager.checkOtpValidation(verificationCode, otpUser)) {
             return ResponseEntity.badRequest().body(new ResponseJsonBody("Invalid verification code"));
         }
 
@@ -43,19 +42,4 @@ public class OtpController {
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(otpUser);
     }
-
-    private boolean checkOtpValidation(String verificationCode, Totp totp) {
-        return !isValidLong(verificationCode) || !totp.verify(verificationCode);
-    }
-
-    private boolean isValidLong(String code) {
-        try {
-            Long.parseLong(code);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
-    }
-
-
 }

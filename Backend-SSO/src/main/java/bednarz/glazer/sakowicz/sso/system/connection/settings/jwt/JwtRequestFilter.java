@@ -6,8 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,9 +23,8 @@ import static bednarz.glazer.sakowicz.sso.system.ConstStorage.JWT_SECRET_PROPERT
 
 
 @Component
+@Slf4j
 public class JwtRequestFilter extends OncePerRequestFilter {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(JwtRequestFilter.class);
     private final CookieManager cookieManager;
     private final MyUserDetailsService userDetailsService;
 
@@ -63,7 +61,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (UsernameNotFoundException e) {
-            LOGGER.info("This login doesn't exist: {}", e.getMessage());
+            log.info("This login doesn't exist: {}", e.getMessage());
         }
     }
 }

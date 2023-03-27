@@ -28,8 +28,7 @@ public class Person {
 
     private String secret = /*Base32.random()*/"AEBHQXB774LN5KR5";
 
-    public Person(Long personId, String login, String password, String email, Roles role) {
-        this.personId = personId;
+    public Person(String login, String password, String email, Roles role) {
         this.login = login;
         this.password = password;
         this.email = email;

@@ -7,8 +7,7 @@ import com.auth0.jwt.exceptions.*;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
@@ -21,11 +20,12 @@ import static bednarz.glazer.sakowicz.sso.system.ConstStorage.*;
 
 
 @Component
+@Slf4j
 public class CookieManager {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(CookieManager.class);
+    private static final int EMPTY_COOKIE_ID = 0;
     private static final String EMPTY_VALUE = "";
-    public static final long FIVE_MINUTES_IN_SECONDS = 5 * 60;
+    private static final long FIVE_MINUTES_IN_SECONDS = 5 * 60;
+    private static final int OTP_COOKIE_NUMBER = 1;
     private final FrontendServerProperties properties;
     @Value("${security.app.cookie.expired.time.ms}")
     private long expirationTime;
@@ -41,11 +41,7 @@ public class CookieManager {
 
     public Optional<String> getJwtFromCookies(HttpServletRequest request, String cookieName) {
         Cookie cookie = WebUtils.getCookie(request, cookieName);
-        if (Objects.isNull(cookie)) {
-            return Optional.empty();
-        } else {
-            return Optional.of(cookie.getValue());
-        }
+        return Objects.isNull(cookie) ? Optional.empty() : Optional.of(cookie.getValue());
     }
 
     public Optional<Map<String, String>> getServer(HttpServletRequest request) {
@@ -121,17 +117,17 @@ public class CookieManager {
 
             return Optional.ofNullable(decodedJWT.getSubject());
         } catch (AlgorithmMismatchException e) {
-            LOGGER.error("Incorrect token algorithm: ", e);
+            log.error("Incorrect token algorithm: ", e);
         } catch (SignatureVerificationException e) {
-            LOGGER.error("Invalid token signature: ", e);
+            log.error("Invalid token signature: ", e);
         } catch (TokenExpiredException e) {
-            LOGGER.error("Token is expired: ", e);
+            log.error("Token is expired: ", e);
         } catch (MissingClaimException e) {
-            LOGGER.error("Token is missing claim: ", e);
+            log.error("Token is missing claim: ", e);
         } catch (IncorrectClaimException e) {
-            LOGGER.error("Token has incorrect claim: ", e);
+            log.error("Token has incorrect claim: ", e);
         } catch (JWTVerificationException e) {
-            LOGGER.debug("Invalid token", e);
+            log.debug("Invalid token", e);
         }
         return Optional.empty();
     }
