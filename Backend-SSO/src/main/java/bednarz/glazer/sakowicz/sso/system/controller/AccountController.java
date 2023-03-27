@@ -62,17 +62,12 @@ public class AccountController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerNewUser(@RequestBody RegisterRequest registerRequest) {
-        personService.createNewPerson(registerRequest)
+        return personService.createNewPerson(registerRequest)
                 .map(person -> ResponseEntity.ok(new ResponseJsonBody(otpManager.generateQRUrl(person))))
                 .orElseGet(() -> ResponseEntity
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body(new ResponseJsonBody("Error occurs when add new user to database"))
+                        .status(HttpStatus.CONFLICT)
+                        .body(new ResponseJsonBody("This login exist: " + registerRequest.login()))
                 );
-
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(new ResponseJsonBody("This login exist: " + registerRequest.login()));
     }
-
 
 }
