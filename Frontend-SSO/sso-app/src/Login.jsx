@@ -61,20 +61,21 @@ export const Login = () => {
   const handleClick = async (e) => {
     e.preventDefault();
     try {
-    //   const url = `${OTP_LOGIN_URL}${verificationCode}`;
-    //   const response = await axios.post(
-    //     url,
-    //     {
-    //       //headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    //       headers: { "Content-Type": "application/json" },
-    //       withCredentials: true
-    //     }
-    //   );
-    //  // const accessToken = response?.data?.accessToken;
-    //   //const roles = response?.data?.roles;
-    //   //setAuth({ user, pwd, roles, accessToken });
-    //   console.log(response);
-    //   navigate("/tempapp");
+      const url = `${OTP_LOGIN_URL}${verificationCode}`;
+      const response = await axios.post(
+        url,
+          undefined,
+        {
+          //headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true
+        }
+      );
+     // const accessToken = response?.data?.accessToken;
+      //const roles = response?.data?.roles;
+      //setAuth({ user, pwd, roles, accessToken });
+      console.log(response);
+      navigate("/tempapp");
     console.log("click")
     } catch (err) {
       if (!err?.response) {
