@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 public final class ConstStorage {
     public static final String ADDRESS_PROPERTIES = "address";
     public static final String AUTHENTICATED_ENDPOINT = "/authenticated";
-    public static final String AUTHORIZATION_OTP_ENDPOINT = "/authorization/otp";
+    public static final String AUTHORIZATION_OTP_ENDPOINT = "/authorization/otp/";
     public static final String COOKIE_NAME_PROPERTIES = "cookieName";
     public static final String JWT_SECRET_PROPERTIES = "jwt-secret";
 }

@@ -34,7 +34,7 @@ public class AccountData implements UserDetails {
 
     @Override
     public String getUsername() {
-        return person.getLogin();
+        return person.getUsername();
     }
 
     @Override

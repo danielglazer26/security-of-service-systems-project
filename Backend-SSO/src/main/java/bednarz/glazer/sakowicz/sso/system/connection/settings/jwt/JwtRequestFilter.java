@@ -35,24 +35,27 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        cookieManager.getLoginFromOTPCookies(request).ifPresentOrElse(
+                (login) -> validateUsername(request, login),
+                () -> validateDataFromAnotherApplication(request)
+        );
+        filterChain.doFilter(request, response);
+    }
+
+    private void validateDataFromAnotherApplication(HttpServletRequest request) {
         cookieManager.getServer(request).ifPresent(serverData -> {
             String cookieName = serverData.get(COOKIE_NAME_PROPERTIES);
             cookieManager.getJwtFromCookies(request, cookieName)
                     .flatMap(jwtToken -> cookieManager.decodeJwtToken(jwtToken, serverData.get(JWT_SECRET_PROPERTIES)))
-                    .ifPresent(login -> validateUserLogin(request, login));
+                    .ifPresent(login -> validateUsername(request, login));
         });
-
-        filterChain.doFilter(request, response);
     }
 
-    private void validateUserLogin(HttpServletRequest request, String login) {
+    private void validateUsername(HttpServletRequest request, String username) {
         try {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(login);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
                             userDetails, userDetails.getPassword(), userDetails.getAuthorities()
@@ -61,7 +64,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (UsernameNotFoundException e) {
-            log.info("This login doesn't exist: {}", e.getMessage());
+            log.info("This username doesn't exist: {}", e.getMessage());
         }
     }
 }

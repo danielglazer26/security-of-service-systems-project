@@ -45,7 +45,7 @@ public class AccountController {
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.login(), loginRequest.password())
+                    new UsernamePasswordAuthenticationToken(loginRequest.user(), loginRequest.pwd())
             );
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseJsonBody("Incorrect credentials"));
@@ -57,7 +57,7 @@ public class AccountController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                .body(personService.getPersonByLogin(loginRequest.login()));
+                .body("Correct credentials");
     }
 
     @PostMapping("/register")
@@ -66,7 +66,7 @@ public class AccountController {
                 .map(person -> ResponseEntity.ok(new ResponseJsonBody(otpManager.generateQRUrl(person))))
                 .orElseGet(() -> ResponseEntity
                         .status(HttpStatus.CONFLICT)
-                        .body(new ResponseJsonBody("This login exist: " + registerRequest.login()))
+                        .body(new ResponseJsonBody("This user exist: " + registerRequest.user()))
                 );
     }
 

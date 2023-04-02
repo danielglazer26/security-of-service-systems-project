@@ -39,13 +39,14 @@ public class CookieManager {
         properties = frontendServerProperties;
     }
 
-    public Optional<String> getJwtFromCookies(HttpServletRequest request, String cookieName) {
-        Cookie cookie = WebUtils.getCookie(request, cookieName);
-        return Objects.isNull(cookie) ? Optional.empty() : Optional.of(cookie.getValue());
+    public Optional<String> getLoginFromOTPCookies(HttpServletRequest request) {
+        return getJwtFromCookies(request, cookieName.get(OTP_COOKIE_NUMBER))
+                .flatMap(jwtToken -> decodeJwtToken(jwtToken, applicationSecret));
     }
 
     public Optional<Map<String, String>> getServer(HttpServletRequest request) {
-        String ipAddress = request.getHeader("X-FORWARDED-FOR");
+        //TODO
+        /*String ipAddress = request.getHeader("X-FORWARDED-FOR");
         if (ipAddress == null) {
             ipAddress = request.getRemoteAddr();
         }
@@ -55,7 +56,13 @@ public class CookieManager {
                 .values()
                 .stream()
                 .filter(stringStringMap -> stringStringMap.get(ADDRESS_PROPERTIES).contains(finalIpAddress))
-                .findFirst();
+                .findFirst();*/
+        return properties.getConfiguration().values().stream().findFirst();
+    }
+
+    public Optional<String> getJwtFromCookies(HttpServletRequest request, String cookieName) {
+        Cookie cookie = WebUtils.getCookie(request, cookieName);
+        return Objects.isNull(cookie) ? Optional.empty() : Optional.of(cookie.getValue());
     }
 
     public ResponseCookie generateCookie(HttpServletRequest request, String login) {
@@ -85,8 +92,9 @@ public class CookieManager {
         );
     }
 
-    private ResponseCookie generateResponseCookie(String cookieName, String secret, String login, String path,
-                                                  long tokenValidityInSeconds) {
+    private ResponseCookie generateResponseCookie(
+            String cookieName, String secret, String login, String path, long tokenValidityInSeconds
+    ) {
         String jwtToken = createJsonWebToken(login, secret);
         return ResponseCookie
                 .from(cookieName, jwtToken)
@@ -100,6 +108,7 @@ public class CookieManager {
         return ResponseCookie
                 .from(cookieName.get(EMPTY_COOKIE_ID), EMPTY_VALUE)
                 .path(AUTHENTICATED_ENDPOINT)
+                .maxAge(0)
                 .build();
     }
 

@@ -25,13 +25,13 @@ public class PersonService {
     }
 
     public Optional<Person> createNewPerson(RegisterRequest registerRequest) {
-        return createNewPerson(registerRequest.login(), registerRequest.password(), registerRequest.email());
+        return createNewPerson(registerRequest.user(), registerRequest.pwd(), registerRequest.email());
     }
 
-    public Optional<Person> createNewPerson(String login, String password, String email) {
-        Optional<Person> optionalPerson = personRepository.findByLogin(login);
+    public Optional<Person> createNewPerson(String username, String password, String email) {
+        Optional<Person> optionalPerson = personRepository.findByUsername(username);
         if (optionalPerson.isEmpty()) {
-            return Optional.of(personRepository.save(new Person(login, generateHash(password), email, Roles.USER)));
+            return Optional.of(personRepository.save(new Person(username, generateHash(password), email, Roles.USER)));
         } else {
             return Optional.empty();
         }
@@ -42,7 +42,7 @@ public class PersonService {
     }
 
     public Optional<Person> getPersonByLogin(String login) {
-        return personRepository.findByLogin(login);
+        return personRepository.findByUsername(login);
     }
 
     public Optional<Person> getPersonById(Long personId) {

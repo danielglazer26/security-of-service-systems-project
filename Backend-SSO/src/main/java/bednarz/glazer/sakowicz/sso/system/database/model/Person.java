@@ -16,7 +16,7 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long personId;
     @Column(nullable = false, unique = true)
-    private String login;
+    private String username;
     @JsonIgnore
     @Column(nullable = false)
     private String password;
@@ -28,8 +28,8 @@ public class Person {
 
     private String secret = /*Base32.random()*/"AEBHQXB774LN5KR5";
 
-    public Person(String login, String password, String email, Roles role) {
-        this.login = login;
+    public Person(String username, String password, String email, Roles role) {
+        this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;

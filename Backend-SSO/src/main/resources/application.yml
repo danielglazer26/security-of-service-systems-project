@@ -24,7 +24,7 @@ frontend:
   configuration:
     frontendFirst:
       cookieName: firstApplicationCookie
-      address: http://localhost
+      address: http://localhost:3000
       jwt-secret: 4Rfofcbot2
     frontendSecond:
       cookieName: secondApplicationCookie
