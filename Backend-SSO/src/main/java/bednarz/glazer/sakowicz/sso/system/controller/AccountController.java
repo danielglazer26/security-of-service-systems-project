@@ -5,6 +5,8 @@ import bednarz.glazer.sakowicz.sso.system.connection.settings.otp.OtpManager;
 import bednarz.glazer.sakowicz.sso.system.controller.requests.LoginRequest;
 import bednarz.glazer.sakowicz.sso.system.controller.requests.RegisterRequest;
 import bednarz.glazer.sakowicz.sso.system.controller.requests.ResponseJsonBody;
+import bednarz.glazer.sakowicz.sso.system.database.model.Person;
+import bednarz.glazer.sakowicz.sso.system.database.model.UserInfo;
 import bednarz.glazer.sakowicz.sso.system.database.services.AccountData;
 import bednarz.glazer.sakowicz.sso.system.database.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -38,6 +37,14 @@ public class AccountController {
         this.authenticationManager = authenticationManager;
         this.cookieManager = cookieManager;
         this.otpManager = otpManager;
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity<UserInfo> verify(Authentication authentication) {
+        AccountData accountData = (AccountData) authentication.getPrincipal();
+        Person person = accountData.getPerson();
+        UserInfo userInfo = new UserInfo(person.getUsername(), person.getEmail(), person.getRole());
+        return ResponseEntity.ok(userInfo);
     }
 
     @PostMapping("/login")

@@ -1,5 +1,6 @@
 package bednarz.glazer.sakowicz.sso.system.connection.settings;
 
+import bednarz.glazer.sakowicz.sso.system.connection.settings.jwt.CookieManager;
 import bednarz.glazer.sakowicz.sso.system.connection.settings.jwt.FrontendServerProperties;
 import bednarz.glazer.sakowicz.sso.system.connection.settings.jwt.JwtRequestFilter;
 import bednarz.glazer.sakowicz.sso.system.database.services.MyUserDetailsService;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,8 +34,8 @@ public class WebControllerConfig {
     private final MyUserDetailsService myUserDetailsService;
 
     @Autowired
-    public WebControllerConfig(JwtRequestFilter jwtRequestFilter, MyUserDetailsService myUserDetailsService) {
-        this.jwtRequestFilter = jwtRequestFilter;
+    public WebControllerConfig(CookieManager cookieManager, MyUserDetailsService myUserDetailsService) {
+        this.jwtRequestFilter = new JwtRequestFilter(cookieManager, myUserDetailsService);
         this.myUserDetailsService = myUserDetailsService;
     }
 
@@ -43,10 +45,15 @@ public class WebControllerConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**", "/public/**").permitAll()
-                .anyRequest().authenticated().and()
+                .anyRequest().authenticated()
+                .and()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/api/auth/register", "/api/auth/login");
     }
 
     @Bean
@@ -88,6 +95,3 @@ public class WebControllerConfig {
                 .toList();
     }
 }
-
-
-

@@ -20,6 +20,7 @@ security:
     cookie:
       name: emptyCookie, otpCookie
       secret: bot2ofc4Rf
+      domain: localhost
       expired:
         time:
           ms: 1800000

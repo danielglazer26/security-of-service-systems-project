@@ -1,2 +1,5 @@
 server:
-  port: 8082
+  port: 8081
+
+authorization:
+  url: "https://localhost:9999/api/auth/verify"

@@ -33,6 +33,8 @@ public class CookieManager {
     private List<String> cookieName;
     @Value("${security.app.cookie.secret}")
     private String applicationSecret;
+    @Value("${security.app.cookie.domain}")
+    private String domain;
 
     @Autowired
     public CookieManager(FrontendServerProperties frontendServerProperties) {
@@ -98,6 +100,7 @@ public class CookieManager {
         String jwtToken = createJsonWebToken(login, secret);
         return ResponseCookie
                 .from(cookieName, jwtToken)
+                .domain(domain)
                 .path(path)
                 .maxAge(tokenValidityInSeconds)
                 .httpOnly(true)
