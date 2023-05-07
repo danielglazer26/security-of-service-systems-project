@@ -1,8 +1,8 @@
-package bednarz.glazer.sakowicz.sso.system.connection.settings;
+package bednarz.glazer.sakowicz.sso.system.settings.connection;
 
-import bednarz.glazer.sakowicz.sso.system.connection.settings.jwt.CookieManager;
-import bednarz.glazer.sakowicz.sso.system.connection.settings.jwt.FrontendServerProperties;
-import bednarz.glazer.sakowicz.sso.system.connection.settings.jwt.JwtRequestFilter;
+import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.CookieManager;
+import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.FrontendServerProperties;
+import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.JwtRequestFilter;
 import bednarz.glazer.sakowicz.sso.system.database.services.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

@@ -1,7 +1,7 @@
 package bednarz.glazer.sakowicz.sso.system.controller;
 
-import bednarz.glazer.sakowicz.sso.system.connection.settings.jwt.CookieManager;
-import bednarz.glazer.sakowicz.sso.system.connection.settings.otp.OtpManager;
+import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.CookieManager;
+import bednarz.glazer.sakowicz.sso.system.settings.connection.otp.OtpManager;
 import bednarz.glazer.sakowicz.sso.system.controller.requests.LoginRequest;
 import bednarz.glazer.sakowicz.sso.system.controller.requests.RegisterRequest;
 import bednarz.glazer.sakowicz.sso.system.controller.requests.ResponseJsonBody;
@@ -9,6 +9,7 @@ import bednarz.glazer.sakowicz.sso.system.database.model.Person;
 import bednarz.glazer.sakowicz.sso.system.database.model.UserInfo;
 import bednarz.glazer.sakowicz.sso.system.database.services.AccountData;
 import bednarz.glazer.sakowicz.sso.system.database.services.PersonService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -68,7 +74,7 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerNewUser(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<?> registerNewUser(@Valid @RequestBody RegisterRequest registerRequest) {
         return personService.createNewPerson(registerRequest)
                 .map(person -> ResponseEntity.ok(new ResponseJsonBody(otpManager.generateQRUrl(person))))
                 .orElseGet(() -> ResponseEntity
@@ -77,4 +83,15 @@ public class AccountController {
                 );
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
+    }
 }

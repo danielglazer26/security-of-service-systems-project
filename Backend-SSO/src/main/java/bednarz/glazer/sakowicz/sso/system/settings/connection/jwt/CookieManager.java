@@ -1,4 +1,4 @@
-package bednarz.glazer.sakowicz.sso.system.connection.settings.jwt;
+package bednarz.glazer.sakowicz.sso.system.settings.connection.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
