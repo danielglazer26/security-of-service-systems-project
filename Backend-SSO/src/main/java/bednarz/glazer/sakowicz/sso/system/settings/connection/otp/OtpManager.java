@@ -1,4 +1,4 @@
-package bednarz.glazer.sakowicz.sso.system.connection.settings.otp;
+package bednarz.glazer.sakowicz.sso.system.settings.connection.otp;
 
 import bednarz.glazer.sakowicz.sso.system.database.model.Person;
 import org.jboss.aerogear.security.otp.Totp;

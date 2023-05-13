@@ -1,4 +1,4 @@
-package bednarz.glazer.sakowicz.sso.system.connection.settings.jwt;
+package bednarz.glazer.sakowicz.sso.system.settings.connection.jwt;
 
 import lombok.Getter;
 import lombok.Setter;
