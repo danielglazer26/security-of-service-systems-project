@@ -1,0 +1,39 @@
+server:
+  port: 9999
+  ssl:
+    key-password: password
+    key-store-password: password
+    key-store: src/main/resources/keystore.jks
+    enabled: false
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+
+security:
+  app:
+    cookie:
+      name: emptyCookie, otpCookie
+      secret: bot2ofc4Rf
+      domain: localhost
+      expired:
+        time:
+          ms: 1800000
+
+
+frontend:
+  configuration:
+    frontendFirst:
+      cookieName: firstApplicationCookie
+#      address: https://localhost:3000
+      address: http://localhost:3000
+      jwt-secret: 4Rfofcbot2
+    frontendSecond:
+      cookieName: secondApplicationCookie
+      address: http://localhost2
+      jwt-secret: boRft24ofc
