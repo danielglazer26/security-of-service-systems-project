@@ -19,7 +19,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.util.List;
 
