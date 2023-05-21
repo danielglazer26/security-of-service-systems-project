@@ -34,9 +34,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        //TODO to remove
-        HttpsURLConnection.setDefaultHostnameVerifier ((hostname, session) -> true);
-
         RequestEntity<Void> requestEntity = RequestEntity
                 .get(authorizationUrl)
                 .header(HttpHeaders.COOKIE, request.getHeader("Cookie"))
