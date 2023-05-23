@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom';
 export const Home = () => {
   const handleSignIn = () => {
     const returnUrl = encodeURIComponent(window.location.href);
-    window.location.href = `http://localhost:3000/login?returnUrl=${returnUrl}`;
+    window.location.href = `https://localhost:3000/login?returnUrl=${returnUrl}`;
   };
 
   const handleSignUp = () => {
     const returnUrl = encodeURIComponent(window.location.href);
-    window.location.href = `http://localhost:3000/register?returnUrl=${returnUrl}`;
+    window.location.href = `https://localhost:3000/register?returnUrl=${returnUrl}`;
   };
 
   return (
