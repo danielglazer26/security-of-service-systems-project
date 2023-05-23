@@ -44,6 +44,7 @@ export const Login = () => {
       setUser("");
       setPwd("");
       setSuccess(true);
+
     } catch (err) {
       if (!err?.response) {
         setErrMsg("No Server Response");
@@ -74,8 +75,13 @@ export const Login = () => {
      // const accessToken = response?.data?.accessToken;
       //const roles = response?.data?.roles;
       //setAuth({ user, pwd, roles, accessToken });
-      console.log(response);
-      navigate("/tempapp");
+      // Extract the returnUrl parameter from the URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const returnUrl = urlParams.get("returnUrl");
+      // console.log(response);
+      console.log(`Url: ${returnUrl}`)
+      window.location.href = returnUrl;
+      // navigate("/tempapp");
     console.log("click")
     } catch (err) {
       if (!err?.response) {
