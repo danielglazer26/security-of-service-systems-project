@@ -2,9 +2,11 @@ server:
   port: 9999
   ssl:
     key-password: password
+    key-store: classpath:keystore
     key-store-password: password
-    key-store: src/main/resources/keystore.jks
-    enabled: false
+    key-store-type: PKCS12
+    key-store-provider: SUN
+    enabled: true
 
 spring:
   datasource:
@@ -30,8 +32,7 @@ frontend:
   configuration:
     frontendFirst:
       cookieName: firstApplicationCookie
-#      address: https://localhost:3000
-      address: http://localhost:3000
+      address: https://localhost:3000
       jwt-secret: 4Rfofcbot2
     frontendSecond:
       cookieName: secondApplicationCookie

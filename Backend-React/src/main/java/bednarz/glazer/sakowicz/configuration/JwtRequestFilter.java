@@ -19,7 +19,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.util.List;
 
@@ -33,9 +32,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-
-        //TODO to remove
-        HttpsURLConnection.setDefaultHostnameVerifier ((hostname, session) -> true);
 
         RequestEntity<Void> requestEntity = RequestEntity
                 .get(authorizationUrl)
