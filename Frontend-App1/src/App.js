@@ -14,7 +14,7 @@ const App = () => {
   useEffect(() => {
     // Send GET request using Axios
     axios
-    .get(USER_INFO_URL)
+    .get(USER_INFO_URL, { withCredentials: true })
     .then((response) => {
       const data = response.data;
       console.log(data);
