@@ -6,7 +6,7 @@ x509_extensions = v3_req
 distinguished_name = dn
 
 [dn]
-CN = frontend-app1
+CN = <cert-name>
 
 [v3_req]
 subjectAltName = @alt_names

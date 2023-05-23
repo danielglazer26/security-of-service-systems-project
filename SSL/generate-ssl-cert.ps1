@@ -1,11 +1,10 @@
-# generate an ssl cert a .cnf cert definition found in the 
 openssl req `
     -newkey rsa:2048 `
     -x509 `
     -nodes `
-    -keyout ./server.key `
+    -keyout ./<key-name>.key `
     -new `
-    -out ./server.crt `
+    -out ./<cert-name>.crt `
     -config ./certdef.cnf `
     -sha256 `
     -days 3650
