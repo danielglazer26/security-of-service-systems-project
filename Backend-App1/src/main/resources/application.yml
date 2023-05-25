@@ -26,6 +26,8 @@ spring:
 sso:
   authorization:
     url: "https://localhost:9999/api/auth/verify"
+  logout:
+    url: "https://localhost:9999/api/auth/logout"
   userinfo:
     #TODO proper URL
     url: "https://localhost:9999/api/user/info"

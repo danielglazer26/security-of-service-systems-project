@@ -24,7 +24,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -81,6 +83,17 @@ public class AccountController {
                         .status(HttpStatus.CONFLICT)
                         .body(new ResponseJsonBody("This user exist: " + registerRequest.user()))
                 );
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout() {
+        ResponseCookie[] deleteAuthCookies = cookieManager.generateDeleteAuthCookies();
+        String[] cookies = Arrays.stream(deleteAuthCookies)
+                .map(ResponseCookie::toString)
+                .toArray(String[]::new);
+        return ResponseEntity.noContent()
+                .header(HttpHeaders.SET_COOKIE, cookies)
+                .build();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

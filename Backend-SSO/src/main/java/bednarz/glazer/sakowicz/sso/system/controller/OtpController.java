@@ -36,9 +36,10 @@ public class OtpController {
             return ResponseEntity.badRequest().body(new ResponseJsonBody("Invalid verification code"));
         }
 
+        ResponseCookie deleteOTPCookie = cookieManager.generateDeleteOTPCookie();
         ResponseCookie responseCookie = cookieManager.generateCookie(request, accountData.getUsername());
         return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString(), deleteOTPCookie.toString())
                 .body(otpUser);
     }
 

@@ -84,6 +84,16 @@ public class CookieManager {
         }
     }
 
+    public ResponseCookie[] generateDeleteAuthCookies() {
+        var serversConfigurations = properties.getConfiguration().values();
+        return serversConfigurations.stream()
+                .map(serverConfiguration -> {
+                    String cookieName = serverConfiguration.get(COOKIE_NAME_PROPERTIES);
+                    return generateEmptyCookie(cookieName, AUTHENTICATED_ENDPOINT);
+                })
+                .toArray(ResponseCookie[]::new);
+    }
+
     public ResponseCookie generateOTPCookie(String login) {
         return generateResponseCookie(
                 cookieName.get(OTP_COOKIE_NUMBER),
@@ -92,6 +102,10 @@ public class CookieManager {
                 AUTHORIZATION_OTP_ENDPOINT,
                 FIVE_MINUTES_IN_SECONDS
         );
+    }
+
+    public ResponseCookie generateDeleteOTPCookie() {
+        return generateEmptyCookie(cookieName.get(OTP_COOKIE_NUMBER), AUTHORIZATION_OTP_ENDPOINT);
     }
 
     private ResponseCookie generateResponseCookie(
@@ -108,9 +122,13 @@ public class CookieManager {
     }
 
     public ResponseCookie generateEmptyCookie() {
+        return generateEmptyCookie(cookieName.get(EMPTY_COOKIE_ID), AUTHENTICATED_ENDPOINT);
+    }
+
+    public ResponseCookie generateEmptyCookie(String name, String path) {
         return ResponseCookie
-                .from(cookieName.get(EMPTY_COOKIE_ID), EMPTY_VALUE)
-                .path(AUTHENTICATED_ENDPOINT)
+                .from(name, EMPTY_VALUE)
+                .path(path)
                 .maxAge(0)
                 .build();
     }
