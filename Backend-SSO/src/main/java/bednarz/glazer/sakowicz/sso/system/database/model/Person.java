@@ -25,7 +25,7 @@ public class Person {
     @Column(nullable = false)
     private String email;
 
-    @ManyToMany(targetEntity = ApplicationRoles.class, mappedBy = "people", fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = ApplicationRoles.class, fetch = FetchType.EAGER)
     private List<ApplicationRoles> roles;
 
     private String secret = /*Base32.random()*/"AEBHQXB774LN5KR5";

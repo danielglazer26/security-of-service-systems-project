@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
@@ -22,9 +20,6 @@ public class ApplicationRoles {
 
     @Column(nullable = false)
     private String applicationName;
-
-    @ManyToMany(targetEntity = Person.class, fetch = FetchType.EAGER)
-    private List<Person> people;
 
     public ApplicationRoles(Roles role, String applicationName) {
         this.role = role;
