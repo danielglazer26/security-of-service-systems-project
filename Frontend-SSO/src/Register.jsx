@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, useEffect, useRef } from 'react';
 import {faInfoCircle, faCheck, faTimes} from '@fortawesome/free-solid-svg-icons'
 import axios from "./api/axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export const Register = () => {
  
@@ -10,6 +10,8 @@ export const Register = () => {
     const PWD_REGEX =/^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹]).{10,16}$/;
     const EMAIL_REGEX = /\S+@\S+\.\S+/;
     const REGISTER_URL = "api/auth/register";
+    const urlParams = new URLSearchParams(window.location.search);
+    const returnUrl = urlParams.get("returnUrl");
 
     const userRef = useRef();
     const errRef = useRef();
@@ -33,7 +35,8 @@ export const Register = () => {
     const navigate = useNavigate();
     
     function handleClick() {
-      navigate("/login");
+      // navigate("/login");
+      navigate(`/login?returnUrl=${encodeURIComponent(returnUrl)}`)
     }
 
     useEffect(() => {
@@ -296,7 +299,8 @@ export const Register = () => {
             Already registered?
             <br />
             <span className="line">
-              {<a href="/login">Sign In</a> }
+              {/* {<a href="/login">Sign In</a> } */}
+              <Link to={`/login?returnUrl=${encodeURIComponent(returnUrl)}`}>Sign In</Link>
             </span>
           </p>
         </section>

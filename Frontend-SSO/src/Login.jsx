@@ -1,11 +1,13 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
 import axios from "./api/axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export const Login = () => {
 
   const LOGIN_URL = "api/auth/login";
   const OTP_LOGIN_URL = "authorization/otp/login?verificationCode=";
+  const urlParams = new URLSearchParams(window.location.search);
+  const returnUrl = urlParams.get("returnUrl");
   
   const userRef = useRef();
   const errRef = useRef();
@@ -155,7 +157,8 @@ export const Login = () => {
             Don't have an Account?
             <br />
             <span className="line">
-              <a href='/register'>Sign Up</a>
+              {/* <a href='/register'>Sign Up</a> */}
+              <Link to={`/register?returnUrl=${encodeURIComponent(returnUrl)}`}>Sign Up</Link>
             </span>
           </p>
         </section>
