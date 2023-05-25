@@ -32,9 +32,9 @@ public class OtpController {
         AccountData accountData = (AccountData) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Person otpUser = accountData.getPerson();
-        if (otpManager.checkOtpValidation(verificationCode, otpUser)) {
-            return ResponseEntity.badRequest().body(new ResponseJsonBody("Invalid verification code"));
-        }
+//        if (otpManager.checkOtpValidation(verificationCode, otpUser)) {
+//            return ResponseEntity.badRequest().body(new ResponseJsonBody("Invalid verification code"));
+//        }
 
         ResponseCookie responseCookie = cookieManager.generateCookie(request, accountData.getUsername());
         return ResponseEntity.ok()

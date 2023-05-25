@@ -3,6 +3,7 @@ package bednarz.glazer.sakowicz.sso.system.database.services;
 
 import bednarz.glazer.sakowicz.sso.system.controller.requests.RegisterRequest;
 import bednarz.glazer.sakowicz.sso.system.database.model.Person;
+import bednarz.glazer.sakowicz.sso.system.database.model.ApplicationRoles;
 import bednarz.glazer.sakowicz.sso.system.database.model.Roles;
 import bednarz.glazer.sakowicz.sso.system.database.repositories.PersonRepository;
 import jakarta.transaction.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -19,9 +21,12 @@ public class PersonService {
 
     private final PersonRepository personRepository;
 
+    private final ApplicationRolesService rolesService;
+
     @Autowired
-    public PersonService(PersonRepository personRepository) {
+    public PersonService(PersonRepository personRepository, ApplicationRolesService rolesService) {
         this.personRepository = personRepository;
+        this.rolesService = rolesService;
     }
 
     public Optional<Person> createNewPerson(RegisterRequest registerRequest) {
@@ -31,7 +36,8 @@ public class PersonService {
     public Optional<Person> createNewPerson(String username, String password, String email) {
         Optional<Person> optionalPerson = personRepository.findByUsername(username);
         if (optionalPerson.isEmpty()) {
-            return Optional.of(personRepository.save(new Person(username, generateHash(password), email, Roles.USER)));
+            return Optional.of(personRepository.save(new Person(username, generateHash(password), email,
+                    rolesService.getUserRoles())));
         } else {
             return Optional.empty();
         }
@@ -51,10 +57,6 @@ public class PersonService {
 
     public List<Person> getAllPeople() {
         return personRepository.findAll();
-    }
-
-    public List<Person> getAllUsers() {
-        return personRepository.findByRole(Roles.USER);
     }
 
     public void removePerson(Person person) {

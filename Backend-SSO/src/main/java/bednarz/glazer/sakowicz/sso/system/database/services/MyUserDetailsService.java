@@ -2,7 +2,6 @@ package bednarz.glazer.sakowicz.sso.system.database.services;
 
 
 import bednarz.glazer.sakowicz.sso.system.database.model.Person;
-import bednarz.glazer.sakowicz.sso.system.database.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,16 +13,16 @@ import java.util.Optional;
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
-    private final PersonRepository personRepository;
+    private final PersonService personService;
 
     @Autowired
-    public MyUserDetailsService(PersonRepository personRepository) {
-        this.personRepository = personRepository;
+    public MyUserDetailsService(PersonService personService) {
+        this.personService = personService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        Optional<Person> person = personRepository.findByUsername(username);
+        Optional<Person> person = personService.getPersonByLogin(username);
         if (person.isPresent()) {
             return new AccountData(person.get());
         } else {
