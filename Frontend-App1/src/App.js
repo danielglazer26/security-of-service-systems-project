@@ -18,7 +18,7 @@ const App = () => {
     .then((response) => {
       const data = response.data;
       console.log(data);
-      navigate('/userpage'); // Redirect to /userpage on successful response
+      navigate('/userpage', { state: { data } }); // Redirect to /userpage on successful response
       setIsLoading(false);
     })
     .catch((error) => {

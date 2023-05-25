@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from './api/axios';
 
 
 export const UserPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const USER_INFO_URL = "api/user/info";
+  const { data } = location.state;
 
 
   return (
     <div>
       <h1>User Page</h1>
       {/* Add your UserPage content */}
+      <p>{data.role}</p>
     </div>
   );
 };
