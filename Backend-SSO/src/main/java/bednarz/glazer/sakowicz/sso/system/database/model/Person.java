@@ -25,15 +25,25 @@ public class Person {
     @Column(nullable = false)
     private String email;
 
-    @ManyToMany(targetEntity = ApplicationRoles.class, fetch = FetchType.EAGER)
-    private List<ApplicationRoles> roles;
+    @ManyToMany(targetEntity = ApplicationRole.class, fetch = FetchType.EAGER)
+    private List<ApplicationRole> roles;
 
+    @JsonIgnore
     private String secret = /*Base32.random()*/"AEBHQXB774LN5KR5";
 
-    public Person(String username, String password, String email, List<ApplicationRoles> roles) {
+    public Person(String username, String password, String email, List<ApplicationRole> roles) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.roles = roles;
+    }
+
+    public Person(Person person) {
+        this.personId = person.getPersonId();
+        this.username = person.getUsername();
+        this.password = person.getPassword();
+        this.email = person.getEmail();
+        this.roles = person.getRoles();
+        this.secret = person.getSecret();
     }
 }

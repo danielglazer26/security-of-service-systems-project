@@ -1,14 +1,13 @@
 package bednarz.glazer.sakowicz.sso.system.database.services;
 
-import bednarz.glazer.sakowicz.sso.system.database.model.ApplicationRoles;
+import bednarz.glazer.sakowicz.sso.system.database.model.ApplicationRole;
 import bednarz.glazer.sakowicz.sso.system.database.model.Roles;
 import bednarz.glazer.sakowicz.sso.system.database.repositories.ApplicationRolesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ApplicationRolesService {
@@ -16,17 +15,27 @@ public class ApplicationRolesService {
     private final ApplicationRolesRepository rolesRepository;
 
     @Autowired
-    public ApplicationRolesService(ApplicationRolesRepository rolesRepository, @Value("${frontend.server.names}") List<String> clients) {
+    public ApplicationRolesService(ApplicationRolesRepository rolesRepository) {
         this.rolesRepository = rolesRepository;
-
-        clients.forEach(client -> Arrays.stream(Roles.values()).forEach(role -> {
-            if (!rolesRepository.existsByRoleAndApplicationName(role, client)) {
-                rolesRepository.save(new ApplicationRoles(role, client));
-            }
-        }));
     }
 
-    public List<ApplicationRoles> getUserRoles() {
-        return rolesRepository.findAllByRole(Roles.USER);
+    public boolean checkIfApplicationRoleExists(Roles roles, String applicationName) {
+        return rolesRepository.existsByRoleAndApplicationName(roles, applicationName);
+    }
+
+    public void saveApplicationRole(ApplicationRole applicationRole) {
+        rolesRepository.save(applicationRole);
+    }
+
+    public List<ApplicationRole> getRolesForApplication(String applicationName) {
+        return rolesRepository.findAllByApplicationName(applicationName);
+    }
+
+    public List<ApplicationRole> getRolesForApplication(Roles role) {
+        return rolesRepository.findAllByRole(role);
+    }
+
+    public Optional<ApplicationRole> getRolesForApplication(Roles roles, String applicationName) {
+        return rolesRepository.findByRoleAndApplicationName(roles, applicationName);
     }
 }

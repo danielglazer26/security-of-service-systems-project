@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ApplicationRoles {
+public class ApplicationRole {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
@@ -21,7 +21,7 @@ public class ApplicationRoles {
     @Column(nullable = false)
     private String applicationName;
 
-    public ApplicationRoles(Roles role, String applicationName) {
+    public ApplicationRole(Roles role, String applicationName) {
         this.role = role;
         this.applicationName = applicationName;
     }

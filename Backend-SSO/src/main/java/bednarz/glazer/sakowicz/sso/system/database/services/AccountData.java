@@ -1,7 +1,7 @@
 package bednarz.glazer.sakowicz.sso.system.database.services;
 
 
-import bednarz.glazer.sakowicz.sso.system.database.model.ApplicationRoles;
+import bednarz.glazer.sakowicz.sso.system.database.model.ApplicationRole;
 import bednarz.glazer.sakowicz.sso.system.database.model.Person;
 import bednarz.glazer.sakowicz.sso.system.database.model.Roles;
 import lombok.Getter;
@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class AccountData implements UserDetails {
 
@@ -20,19 +19,19 @@ public class AccountData implements UserDetails {
 
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public AccountData(Person person) {
+    public AccountData(Person person, String serverName) {
         this.person = person;
-        authorities = getUserAuthority();
+        authorities = getUserAuthority(serverName);
     }
 
 
-    private List<GrantedAuthority> getUserAuthority() {
+    private List<GrantedAuthority> getUserAuthority(String serverName) {
         return List.of(
                 new SimpleGrantedAuthority(
                         person.getRoles().stream()
-                                .filter(applicationRoles -> applicationRoles.getApplicationName().equals("sso"))
+                                .filter(applicationRoles -> applicationRoles.getApplicationName().equals(serverName))
                                 .findFirst()
-                                .orElse(new ApplicationRoles(Roles.USER, "sso")).getRole().name()
+                                .orElse(new ApplicationRole(Roles.USER, serverName)).getRole().name()
                 )
         );
     }

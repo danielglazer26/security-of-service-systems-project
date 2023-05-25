@@ -27,8 +27,12 @@ security:
         time:
           ms: 1800000
 
+sso:
+  name: DEW_SSO
 
 frontend:
+  server:
+    names: app1, app2
   configuration:
     frontendFirst:
       cookieName: firstApplicationCookie
