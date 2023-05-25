@@ -144,6 +144,11 @@ button {
   display: inline-block;
 }
 
+.loading {
+  align-items: center;
+  background-color: #F9F5EB;
+}
+
  #title{
   color:#002B5B;
   margin-bottom: 1rem;
@@ -176,4 +181,7 @@ button {
 
 #ok_button {
   max-width: 100%;
+  padding-left: 60px;
+  padding-right: 60px;
 }
+

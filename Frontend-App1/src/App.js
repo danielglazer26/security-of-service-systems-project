@@ -8,7 +8,7 @@ import axios from './api/axios';
 
 const App = () => {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState('true');
+  const [isLoading, setIsLoading] = useState(true);
   const USER_INFO_URL = "api/user/info";
 
   useEffect(() => {
@@ -36,7 +36,7 @@ if (isLoading) {
 }  
 return (
     <div className="App">
-      <p id="title">Client App 01</p>
+      <p className="fixed-title">Client App 01</p>
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/userpage" element={<UserPage />} />
