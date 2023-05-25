@@ -31,9 +31,10 @@ public class TextService {
 //        }
         var reviewedTexts = textRepository.findAllByReviewedIsTrue();
         var authorIds = getUniqueAuthorIds(reviewedTexts);
-        var authors = mapIdsToUsernames(authorIds, request);
+        //TODO var authors = mapIdsToUsernames(authorIds, request);
         return reviewedTexts.stream()
-                .map(text -> text.toTextDto(authors.get(text.getAuthorId())))
+                //TODO .map(text -> text.toTextDto(authors.get(text.getAuthorId())))
+                .map(text -> text.toTextDto("PLACEHOLDER"))
                 .toList();
     }
 
@@ -66,9 +67,10 @@ public class TextService {
     public List<TextDto> getTextsToReview(HttpServletRequest request) {
         var textsToReview = textRepository.findAllByReviewedIsFalse();
         var authorIds = getUniqueAuthorIds(textsToReview);
-        var authors = mapIdsToUsernames(authorIds, request);
+        //TODO var authors = mapIdsToUsernames(authorIds, request);
         return textsToReview.stream()
-                .map(text -> text.toTextDto(authors.get(text.getAuthorId())))
+                //TODO .map(text -> text.toTextDto(authors.get(text.getAuthorId())))
+                .map(text -> text.toTextDto("PLACEHOLDER"))
                 .toList();
     }
 
