@@ -5,6 +5,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -21,16 +23,19 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    @Value("${authorization.url}")
+    @Value("${sso.authorization.url}")
     private String authorizationUrl;
+    private final RestTemplate restTemplate;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain)
             throws ServletException, IOException {
 
         RequestEntity<Void> requestEntity = RequestEntity
@@ -41,7 +46,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         ResponseEntity<UserInfo> userInfoResponseEntity;
 
         try {
-            userInfoResponseEntity = new RestTemplate().exchange(requestEntity, UserInfo.class);
+            userInfoResponseEntity = restTemplate.exchange(requestEntity, UserInfo.class);
         } catch (HttpClientErrorException exception) {
             response.setStatus(exception.getStatusCode().value());
             return;
@@ -49,7 +54,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         UserInfo userInfo = userInfoResponseEntity.getBody();
 
-        var authorities = List.of(new SimpleGrantedAuthority(userInfo.role().name()));
+        var authorities = List.of(new SimpleGrantedAuthority(Objects.requireNonNull(userInfo).role().name()));
         var authentication = new UsernamePasswordAuthenticationToken(userInfo, null, authorities);
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

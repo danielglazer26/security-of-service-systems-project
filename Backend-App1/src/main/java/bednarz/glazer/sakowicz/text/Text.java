@@ -21,10 +21,10 @@ public class Text {
     @Column(nullable = false)
     private String content;
 
-    public TextDto toTextDto() {
+    public TextDto toTextDto(String author) {
         return TextDto.builder()
                 .id(id)
-                .author("PLACEHOLDER") //TODO
+                .author(author)
                 .content(content)
                 .build();
     }

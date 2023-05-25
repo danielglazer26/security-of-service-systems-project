@@ -1,6 +1,7 @@
 package bednarz.glazer.sakowicz.text;
 
 import bednarz.glazer.sakowicz.userinfo.UserInfo;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,11 +22,9 @@ public class TextController {
     private final TextService textService;
 
     @GetMapping
-    public ResponseEntity<List<TextDto>> getReviewedTexts(Authentication authentication) {
+    public ResponseEntity<List<TextDto>> getReviewedTexts(Authentication authentication, HttpServletRequest request) {
         UserInfo user = (UserInfo) authentication.getPrincipal();
-        var reviewedTexts = textService.getReviewedTextsFor(user).stream()
-                .map(Text::toTextDto)
-                .toList();
+        var reviewedTexts = textService.getReviewedTextsFor(user, request);
         return ResponseEntity.ok(reviewedTexts);
     }
 
@@ -43,10 +42,8 @@ public class TextController {
     }
 
     @GetMapping("/review")
-    public ResponseEntity<List<TextDto>> getTextsToReview() {
-        var textsToReview = textService.getTextsToReview().stream()
-                .map(Text::toTextDto)
-                .toList();
+    public ResponseEntity<List<TextDto>> getTextsToReview(HttpServletRequest request) {
+        var textsToReview = textService.getTextsToReview(request);
         return ResponseEntity.ok(textsToReview);
     }
 
