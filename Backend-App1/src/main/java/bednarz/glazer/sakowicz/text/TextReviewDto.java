@@ -10,8 +10,5 @@ public class TextReviewDto {
     private Long reviewedTextId;
     @NotNull
     @NotBlank
-    private String title;
-    @NotNull
-    @NotBlank
     private String content;
 }

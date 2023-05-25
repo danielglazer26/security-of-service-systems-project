@@ -8,8 +8,5 @@ import lombok.Data;
 public class NewTextDto {
     @NotNull
     @NotBlank
-    private String title;
-    @NotNull
-    @NotBlank
     private String content;
 }

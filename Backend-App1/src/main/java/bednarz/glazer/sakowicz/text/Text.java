@@ -8,6 +8,5 @@ import lombok.Data;
 public class Text {
     private Long id;
     private String author;
-    private String title;
     private String content;
 }

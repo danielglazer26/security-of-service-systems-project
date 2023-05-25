@@ -20,13 +20,11 @@ public class TextController {
         final List<Text> testResult = List.of(Text.builder()
                         .id(1L)
                         .author("Author username")
-                        .title("Test title")
                         .content("TEST TEST TEST TEST TEST TEST")
                         .build(),
                 Text.builder()
                         .id(2L)
                         .author("Author username 2")
-                        .title("Test title 2")
                         .content("TEST2 TEST2 TEST2 TEST2 TEST2 TEST2")
                         .build()
         );
@@ -48,13 +46,11 @@ public class TextController {
         final List<Text> testResult = List.of(Text.builder()
                         .id(3L)
                         .author("Author username 3")
-                        .title("Test title 3")
                         .content("TEXT TO REVIEW 1")
                         .build(),
                 Text.builder()
                         .id(4L)
                         .author("Author username 4")
-                        .title("Test title 4")
                         .content("TEXT TO REVIEW 2")
                         .build()
         );
