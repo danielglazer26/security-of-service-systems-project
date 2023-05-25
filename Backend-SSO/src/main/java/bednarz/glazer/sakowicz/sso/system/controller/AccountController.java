@@ -1,14 +1,14 @@
 package bednarz.glazer.sakowicz.sso.system.controller;
 
-import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.CookieManager;
-import bednarz.glazer.sakowicz.sso.system.settings.connection.otp.OtpManager;
 import bednarz.glazer.sakowicz.sso.system.controller.requests.LoginRequest;
 import bednarz.glazer.sakowicz.sso.system.controller.requests.RegisterRequest;
 import bednarz.glazer.sakowicz.sso.system.controller.requests.ResponseJsonBody;
+import bednarz.glazer.sakowicz.sso.system.controller.requests.UserInfoRequest;
 import bednarz.glazer.sakowicz.sso.system.database.model.Person;
-import bednarz.glazer.sakowicz.sso.system.database.model.UserInfo;
 import bednarz.glazer.sakowicz.sso.system.database.services.AccountData;
 import bednarz.glazer.sakowicz.sso.system.database.services.PersonService;
+import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.CookieManager;
+import bednarz.glazer.sakowicz.sso.system.settings.connection.otp.OtpManager;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -48,11 +48,18 @@ public class AccountController {
     }
 
     @GetMapping("/verify")
-    public ResponseEntity<UserInfo> verify(Authentication authentication) {
+    public ResponseEntity<?> verify(Authentication authentication) {
         AccountData accountData = (AccountData) authentication.getPrincipal();
         Person person = accountData.getPerson();
-        UserInfo userInfo = new UserInfo(person.getUsername(), person.getEmail(), person.getRole());
-        return ResponseEntity.ok(userInfo);
+        return ResponseEntity.ok(new ResponseJsonBody(person.getPersonId().toString()));
+    }
+
+    @PostMapping("/user/info")
+    public ResponseEntity<?> usersInfo(@RequestBody UserInfoRequest userInfoRequest) {
+        return ResponseEntity.ok(
+                personService.getAllPeopleByIdsAndFilterApplicationName(userInfoRequest.usersId(),
+                        userInfoRequest.applicationName())
+        );
     }
 
     @PostMapping("/login")

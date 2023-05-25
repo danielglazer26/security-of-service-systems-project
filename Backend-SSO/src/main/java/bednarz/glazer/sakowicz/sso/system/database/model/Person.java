@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -23,15 +25,25 @@ public class Person {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    private Roles role;
+    @ManyToMany(targetEntity = ApplicationRole.class, fetch = FetchType.EAGER)
+    private List<ApplicationRole> roles;
 
+    @JsonIgnore
     private String secret = /*Base32.random()*/"AEBHQXB774LN5KR5";
 
-    public Person(String username, String password, String email, Roles role) {
+    public Person(String username, String password, String email, List<ApplicationRole> roles) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.role = role;
+        this.roles = roles;
+    }
+
+    public Person(Person person) {
+        this.personId = person.getPersonId();
+        this.username = person.getUsername();
+        this.password = person.getPassword();
+        this.email = person.getEmail();
+        this.roles = person.getRoles();
+        this.secret = person.getSecret();
     }
 }

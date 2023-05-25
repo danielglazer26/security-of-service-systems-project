@@ -1,7 +1,9 @@
 package bednarz.glazer.sakowicz.sso.system.database.services;
 
 
+import bednarz.glazer.sakowicz.sso.system.database.model.ApplicationRole;
 import bednarz.glazer.sakowicz.sso.system.database.model.Person;
+import bednarz.glazer.sakowicz.sso.system.database.model.Roles;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,9 +19,21 @@ public class AccountData implements UserDetails {
 
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public AccountData(Person person) {
+    public AccountData(Person person, String serverName) {
         this.person = person;
-        authorities = List.of(new SimpleGrantedAuthority(person.getRole().name()));
+        authorities = getUserAuthority(serverName);
+    }
+
+
+    private List<GrantedAuthority> getUserAuthority(String serverName) {
+        return List.of(
+                new SimpleGrantedAuthority(
+                        person.getRoles().stream()
+                                .filter(applicationRoles -> applicationRoles.getApplicationName().equals(serverName))
+                                .findFirst()
+                                .orElse(new ApplicationRole(Roles.USER, serverName)).getRole().name()
+                )
+        );
     }
 
     @Override
