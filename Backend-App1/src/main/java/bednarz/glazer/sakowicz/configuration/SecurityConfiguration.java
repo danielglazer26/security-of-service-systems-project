@@ -1,5 +1,6 @@
 package bednarz.glazer.sakowicz.configuration;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,12 @@ public class SecurityConfiguration {
                     .authorizeHttpRequests()
                     .requestMatchers(HttpMethod.GET, "/api/user/info")
                     .hasAnyAuthority("USER", "ADMIN", "MODERATOR")
+                    .requestMatchers(HttpMethod.GET, "/api/text/**")
+                    .hasAnyAuthority("USER", "ADMIN", "MODERATOR")
+                    .requestMatchers(HttpMethod.POST, "/api/text/**")
+                    .hasAnyAuthority("USER", "ADMIN", "MODERATOR")
+                    .requestMatchers(HttpMethod.DELETE, "/api/text")
+                    .hasAnyAuthority("USER", "ADMIN", "MODERATOR")
                     .anyRequest()
                     .authenticated()
                 .and()
@@ -37,7 +44,7 @@ public class SecurityConfiguration {
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
-            public void addCorsMappings(CorsRegistry registry) {
+            public void addCorsMappings(@NotNull CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("https://localhost:3001")
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
