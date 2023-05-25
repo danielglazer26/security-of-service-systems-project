@@ -1,4 +1,4 @@
-package bednarz.glazer.sakowicz.text;
+package bednarz.glazer.sakowicz.text.dto;
 
 import lombok.Builder;
 import lombok.Data;

@@ -2,6 +2,7 @@ package bednarz.glazer.sakowicz.configuration;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,7 +16,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfiguration {
-
+    @Value("${frontend.url}")
+    private String frontendUrl;
     private final JwtRequestFilter jwtRequestFilter;
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -46,7 +48,7 @@ public class SecurityConfiguration {
             @Override
             public void addCorsMappings(@NotNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://localhost:3001")
+                        .allowedOrigins(frontendUrl)
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowCredentials(true);
             }

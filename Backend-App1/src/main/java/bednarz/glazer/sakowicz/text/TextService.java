@@ -1,5 +1,9 @@
 package bednarz.glazer.sakowicz.text;
 
+import bednarz.glazer.sakowicz.text.dto.NewTextDto;
+import bednarz.glazer.sakowicz.text.dto.TextDto;
+import bednarz.glazer.sakowicz.text.dto.TextReviewDto;
+import bednarz.glazer.sakowicz.text.exception.TextNotFoundException;
 import bednarz.glazer.sakowicz.userinfo.UserInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

@@ -1,5 +1,6 @@
 package bednarz.glazer.sakowicz.text;
 
+import bednarz.glazer.sakowicz.text.dto.TextDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,10 +15,13 @@ public class Text {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "reviewed", nullable = false)
     private boolean reviewed;
+
     @Column(name = "author_id", nullable = false)
     private Long authorId;
+
     @Column(nullable = false)
     private String content;
 
