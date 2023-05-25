@@ -1,12 +1,31 @@
 package bednarz.glazer.sakowicz.text;
 
-import lombok.Builder;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Data
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
+@Table(name = "text")
 public class Text {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String author;
+    @Column(name = "reviewed", nullable = false)
+    private boolean reviewed;
+    @Column(name = "author_id", nullable = false)
+    private Long authorId;
+    @Column(nullable = false)
     private String content;
+
+    public TextDto toTextDto() {
+        return TextDto.builder()
+                .id(id)
+                .author("PLACEHOLDER") //TODO
+                .content(content)
+                .build();
+    }
 }
