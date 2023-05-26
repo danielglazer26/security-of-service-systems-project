@@ -109,10 +109,52 @@
   font-size: 18px; /* Adjust the font size as desired */
   font-weight: bold;
   z-index: 999; /* Ensure the title is displayed above other elements */
-
 }
 
 .loading {
   align-items: center;
 }
+
+/* .user-page-container {
+  padding: 20px;
+}
+
+.page-title {
+  margin-bottom: 20px;
+  margin-top: 50px;
+  text-align: center;
+}
+
+.content-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.section-container {
+  margin-bottom: 30px;
+}
+
+.section-title {
+  margin-bottom: 10px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 20px 0;
+}
+
+.content-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.texts-container {
+  display: grid;
+  gap: 10px;
+} */
+
+
+
 
