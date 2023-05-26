@@ -59,6 +59,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             return;
         }
 
+        var cookiesToSet = verifyResponse.getHeaders().get(HttpHeaders.SET_COOKIE);
+        if (cookiesToSet != null) {
+            cookiesToSet.forEach(cookie -> response.addHeader(HttpHeaders.SET_COOKIE, cookie));
+        }
+
         RequestEntity<UserInfoRequest> userInfoRequest = RequestEntity
                 .post(userInfoUrl)
                 .header(HttpHeaders.COOKIE, request.getHeader("Cookie"))

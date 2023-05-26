@@ -9,6 +9,7 @@ import bednarz.glazer.sakowicz.sso.system.database.services.AccountData;
 import bednarz.glazer.sakowicz.sso.system.database.services.PersonService;
 import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.CookieManager;
 import bednarz.glazer.sakowicz.sso.system.settings.connection.otp.OtpManager;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -48,10 +49,13 @@ public class AccountController {
     }
 
     @GetMapping("/verify")
-    public ResponseEntity<Long> verify(Authentication authentication) {
+    public ResponseEntity<Long> verify(Authentication authentication, HttpServletRequest request) {
         AccountData accountData = (AccountData) authentication.getPrincipal();
         Person person = accountData.getPerson();
-        return ResponseEntity.ok(person.getPersonId());
+        ResponseCookie responseCookie = cookieManager.generateCookie(request, accountData.getUsername());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(person.getPersonId());
     }
 
     @PostMapping("/user/info")

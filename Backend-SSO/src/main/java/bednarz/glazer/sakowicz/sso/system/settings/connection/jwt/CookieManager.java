@@ -116,6 +116,7 @@ public class CookieManager {
                 .from(cookieName, jwtToken)
                 .domain(domain)
                 .path(path)
+                .secure(true)
                 .maxAge(tokenValidityInSeconds)
                 .httpOnly(true)
                 .build();
