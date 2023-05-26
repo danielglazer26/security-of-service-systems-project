@@ -48,18 +48,19 @@ public class AccountController {
     }
 
     @GetMapping("/verify")
-    public ResponseEntity<?> verify(Authentication authentication) {
+    public ResponseEntity<Long> verify(Authentication authentication) {
         AccountData accountData = (AccountData) authentication.getPrincipal();
         Person person = accountData.getPerson();
-        return ResponseEntity.ok(new ResponseJsonBody(person.getPersonId().toString()));
+        return ResponseEntity.ok(person.getPersonId());
     }
 
     @PostMapping("/user/info")
     public ResponseEntity<?> usersInfo(@RequestBody UserInfoRequest userInfoRequest) {
-        return ResponseEntity.ok(
-                personService.getAllPeopleByIdsAndFilterApplicationName(userInfoRequest.usersId(),
-                        userInfoRequest.applicationName())
-        );
+        var body = personService.getAllPeopleByIdsAndFilterApplicationName(userInfoRequest.usersId(),
+                userInfoRequest.applicationName()).stream()
+                .map(Person::toUserInfo)
+                .toList();
+        return ResponseEntity.ok(body);
     }
 
     @PostMapping("/login")

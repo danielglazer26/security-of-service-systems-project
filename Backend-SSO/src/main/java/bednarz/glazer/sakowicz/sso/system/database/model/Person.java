@@ -46,4 +46,8 @@ public class Person {
         this.roles = person.getRoles();
         this.secret = person.getSecret();
     }
+
+    public UserInfo toUserInfo() {
+        return new UserInfo(personId, username, email, roles.get(0).getRole());
+    }
 }

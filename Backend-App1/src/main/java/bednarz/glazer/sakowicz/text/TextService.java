@@ -4,7 +4,9 @@ import bednarz.glazer.sakowicz.text.dto.NewTextDto;
 import bednarz.glazer.sakowicz.text.dto.TextDto;
 import bednarz.glazer.sakowicz.text.dto.TextReviewDto;
 import bednarz.glazer.sakowicz.text.exception.TextNotFoundException;
+import bednarz.glazer.sakowicz.userinfo.Role;
 import bednarz.glazer.sakowicz.userinfo.UserInfo;
+import bednarz.glazer.sakowicz.userinfo.UserInfoRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,24 +23,23 @@ import static java.util.stream.Collectors.toSet;
 @Service
 @RequiredArgsConstructor
 public class TextService {
-    // TODO proper value
-    private static final int MAX_SSO_USER_INFO_IDS = 10;
+    private static final int MAX_SSO_USER_INFO_IDS = 30;
     @Value("${sso.userinfo.url}")
     private String userInfoUrl;
+    @Value("${app.name}")
+    private String applicationName;
     private final TextRepository textRepository;
     private final RestTemplate restTemplate;
 
     public List<TextDto> getReviewedTextsFor(UserInfo user, HttpServletRequest request) {
-        // TODO
-//        if (user.role() == Role.USER) {
-//            return getOwnReviewedTextsFor(user);
-//        }
+        if (user.role() == Role.USER) {
+            return getOwnReviewedTextsFor(user);
+        }
         var reviewedTexts = textRepository.findAllByReviewedIsTrue();
         var authorIds = getUniqueAuthorIds(reviewedTexts);
-        //TODO var authors = mapIdsToUsernames(authorIds, request);
+        var authors = mapIdsToUsernames(authorIds, request);
         return reviewedTexts.stream()
-                //TODO .map(text -> text.toTextDto(authors.get(text.getAuthorId())))
-                .map(text -> text.toTextDto("PLACEHOLDER"))
+                .map(text -> text.toTextDto(authors.get(text.getAuthorId())))
                 .toList();
     }
 
@@ -51,8 +52,7 @@ public class TextService {
 
     public void createText(NewTextDto newTextDto, UserInfo author) {
         Text newText = Text.builder()
-                // TODO .authorId(author.id())
-                .authorId(1L)
+                .authorId(author.id())
                 .content(newTextDto.getContent())
                 .reviewed(false)
                 .build();
@@ -71,10 +71,9 @@ public class TextService {
     public List<TextDto> getTextsToReview(HttpServletRequest request) {
         var textsToReview = textRepository.findAllByReviewedIsFalse();
         var authorIds = getUniqueAuthorIds(textsToReview);
-        //TODO var authors = mapIdsToUsernames(authorIds, request);
+        var authors = mapIdsToUsernames(authorIds, request);
         return textsToReview.stream()
-                //TODO .map(text -> text.toTextDto(authors.get(text.getAuthorId())))
-                .map(text -> text.toTextDto("PLACEHOLDER"))
+                .map(text -> text.toTextDto(authors.get(text.getAuthorId())))
                 .toList();
     }
 
@@ -95,7 +94,7 @@ public class TextService {
     private Map<Long, String> mapIdsToUsernames(List<Long> userIds, HttpServletRequest request) {
         Map<Long, String> result = new HashMap<>();
 
-        for (int i = 0; i + MAX_SSO_USER_INFO_IDS < userIds.size(); i += MAX_SSO_USER_INFO_IDS) {
+        for (int i = 0; i < userIds.size(); i += MAX_SSO_USER_INFO_IDS) {
             var ids = userIds.stream().skip(i).limit(MAX_SSO_USER_INFO_IDS).toList();
             var usernames = getUsernamesFor(ids, request);
 
@@ -108,12 +107,14 @@ public class TextService {
     }
 
     private List<String> getUsernamesFor(List<Long> ids, HttpServletRequest request) {
-        RequestEntity<List<Long>> requestEntity = RequestEntity
+        RequestEntity<UserInfoRequest> requestEntity = RequestEntity
                 .post(userInfoUrl)
                 .header(HttpHeaders.COOKIE, request.getHeader("Cookie"))
-                .body(ids);
+                .body(new UserInfoRequest(ids, applicationName));
 
-        ResponseEntity<String[]> usernamesResponse = restTemplate.exchange(requestEntity, String[].class);
-        return Arrays.stream(Objects.requireNonNull(usernamesResponse.getBody())).toList();
+        ResponseEntity<UserInfo[]> usernamesResponse = restTemplate.exchange(requestEntity, UserInfo[].class);
+        return Arrays.stream(Objects.requireNonNull(usernamesResponse.getBody()))
+                .map(UserInfo::user)
+                .toList();
     }
 }

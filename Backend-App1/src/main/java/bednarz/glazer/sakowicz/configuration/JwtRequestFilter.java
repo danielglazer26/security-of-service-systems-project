@@ -1,6 +1,7 @@
 package bednarz.glazer.sakowicz.configuration;
 
 import bednarz.glazer.sakowicz.userinfo.UserInfo;
+import bednarz.glazer.sakowicz.userinfo.UserInfoRequest;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +26,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+import static java.util.Collections.singletonList;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -32,27 +35,45 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Value("${sso.authorization.url}")
     private String authorizationUrl;
+    @Value("${sso.userinfo.url}")
+    private String userInfoUrl;
+    @Value("${app.name}")
+    private String applicationName;
     private final RestTemplate restTemplate;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain)
             throws ServletException, IOException {
 
-        RequestEntity<Void> requestEntity = RequestEntity
+        RequestEntity<Void> verifyRequest = RequestEntity
                 .get(authorizationUrl)
                 .header(HttpHeaders.COOKIE, request.getHeader("Cookie"))
                 .build();
 
-        ResponseEntity<UserInfo> userInfoResponseEntity;
+        ResponseEntity<Long> verifyResponse;
 
         try {
-            userInfoResponseEntity = restTemplate.exchange(requestEntity, UserInfo.class);
+            verifyResponse = restTemplate.exchange(verifyRequest, Long.class);
         } catch (HttpClientErrorException exception) {
             response.setStatus(exception.getStatusCode().value());
             return;
         }
 
-        UserInfo userInfo = userInfoResponseEntity.getBody();
+        RequestEntity<UserInfoRequest> userInfoRequest = RequestEntity
+                .post(userInfoUrl)
+                .header(HttpHeaders.COOKIE, request.getHeader("Cookie"))
+                .body(new UserInfoRequest(singletonList(verifyResponse.getBody()), applicationName));
+
+        ResponseEntity<UserInfo[]> userInfoResponseEntity;
+
+        try {
+            userInfoResponseEntity = restTemplate.exchange(userInfoRequest, UserInfo[].class);
+        } catch (HttpClientErrorException exception) {
+            response.setStatus(exception.getStatusCode().value());
+            return;
+        }
+
+        UserInfo userInfo = Objects.requireNonNull(userInfoResponseEntity.getBody())[0];
 
         var authorities = List.of(new SimpleGrantedAuthority(Objects.requireNonNull(userInfo).role().name()));
         var authentication = new UsernamePasswordAuthenticationToken(userInfo, null, authorities);
