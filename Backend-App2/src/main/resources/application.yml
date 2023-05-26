@@ -1,0 +1,37 @@
+app:
+  name: "app2"
+
+server:
+  port: 8082
+  ssl:
+    key-password: password
+    key-store: classpath:keystore
+    key-store-password: password
+    key-store-type: PKCS12
+    key-store-provider: SUN
+    trust-store: classpath:truststore
+    trust-store-password: password
+    trust-store-type: PKCS12
+    trust-store-provider: SUN
+    enabled: true
+    protocol: TLSv1.3
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:db-app2
+    driverClassName: org.h2.Driver
+    username: app2
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+
+frontend:
+  url: "https://localhost:3002"
+
+sso:
+  authorization:
+    url: "https://localhost:9999/api/auth/verify"
+  logout:
+    url: "https://localhost:9999/api/auth/logout"
+  userinfo:
+    url: "https://localhost:9999/api/auth/user/info"
