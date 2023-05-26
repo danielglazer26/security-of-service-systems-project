@@ -1,6 +1,7 @@
 package bednarz.glazer.sakowicz.sso.system.settings.connection;
 
 import bednarz.glazer.sakowicz.sso.system.database.services.MyUserDetailsService;
+import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.ApiKeyRequestFilter;
 import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.CookieManager;
 import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.JwtRequestFilter;
 import jakarta.validation.constraints.NotNull;
@@ -28,6 +29,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 public class WebControllerConfig {
     private final JwtRequestFilter jwtRequestFilter;
+    private final ApiKeyRequestFilter apiKeyRequestFilter;
     private final MyUserDetailsService myUserDetailsService;
     @Value("${app.frontend.url}")
     private String frontendUrl;
@@ -36,6 +38,8 @@ public class WebControllerConfig {
     public WebControllerConfig(CookieManager cookieManager, MyUserDetailsService myUserDetailsService) {
         this.jwtRequestFilter = new JwtRequestFilter(cookieManager, myUserDetailsService);
         this.myUserDetailsService = myUserDetailsService;
+        // TODO - dodać do propertiesów
+        this.apiKeyRequestFilter = new ApiKeyRequestFilter("header");
     }
 
     @Bean
@@ -47,6 +51,7 @@ public class WebControllerConfig {
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilter(apiKeyRequestFilter)
                 .build();
     }
 

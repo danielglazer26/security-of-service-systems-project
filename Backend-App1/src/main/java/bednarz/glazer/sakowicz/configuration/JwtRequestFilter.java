@@ -42,7 +42,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final RestTemplate restTemplate;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain)
+    protected void doFilterInternal(@NotNull HttpServletRequest request,
+                                    @NotNull HttpServletResponse response,
+                                    @NotNull FilterChain filterChain)
             throws ServletException, IOException {
 
         RequestEntity<Void> verifyRequest = RequestEntity
@@ -67,6 +69,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         RequestEntity<UserInfoRequest> userInfoRequest = RequestEntity
                 .post(userInfoUrl)
                 .header(HttpHeaders.COOKIE, request.getHeader("Cookie"))
+                .header("header", "value")
                 .body(new UserInfoRequest(singletonList(verifyResponse.getBody()), applicationName));
 
         ResponseEntity<UserInfo[]> userInfoResponseEntity;
