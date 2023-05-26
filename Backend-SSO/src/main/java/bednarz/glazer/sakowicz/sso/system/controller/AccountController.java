@@ -49,10 +49,10 @@ public class AccountController {
     }
 
     @GetMapping("/verify")
-    public ResponseEntity<Long> verify(Authentication authentication, HttpServletRequest request) {
+    public ResponseEntity<Long> verify(Authentication authentication) {
         AccountData accountData = (AccountData) authentication.getPrincipal();
         Person person = accountData.getPerson();
-        ResponseCookie responseCookie = cookieManager.generateCookie(request, accountData.getUsername());
+        ResponseCookie responseCookie = cookieManager.generateCookie(accountData.getUsername());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(person.getPersonId());
@@ -98,13 +98,10 @@ public class AccountController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<?> logout() {
-        ResponseCookie[] deleteAuthCookies = cookieManager.generateDeleteAuthCookies();
-        String[] cookies = Arrays.stream(deleteAuthCookies)
-                .map(ResponseCookie::toString)
-                .toArray(String[]::new);
+    public ResponseEntity<Void> logout() {
+        ResponseCookie deleteAuthCookie = cookieManager.generateDeleteAuthCookies();
         return ResponseEntity.noContent()
-                .header(HttpHeaders.SET_COOKIE, cookies)
+                .header(HttpHeaders.SET_COOKIE, deleteAuthCookie.toString())
                 .build();
     }
 

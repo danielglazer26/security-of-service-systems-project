@@ -1,6 +1,3 @@
-app:
-  name: "app1"
-
 server:
   port: 8081
   ssl:
@@ -25,13 +22,14 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
 
-frontend:
-  url: "https://localhost:3001"
+app:
+  name: app1
+  frontend:
+    url: https://localhost:3001
 
 sso:
-  authorization:
-    url: "https://localhost:9999/api/auth/verify"
-  logout:
-    url: "https://localhost:9999/api/auth/logout"
-  userinfo:
-    url: "https://localhost:9999/api/auth/user/info"
+  url:
+    base: https://localhost:8080
+    authorization: ${sso.url.base}/api/auth/verify
+    logout: ${sso.url.base}/api/auth/logout
+    userinfo: ${sso.url.base}/api/auth/user/info

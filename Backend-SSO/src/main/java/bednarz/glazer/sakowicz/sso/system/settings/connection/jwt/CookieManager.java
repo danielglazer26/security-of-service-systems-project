@@ -8,7 +8,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
@@ -16,101 +15,73 @@ import org.springframework.web.util.WebUtils;
 
 import java.util.*;
 
-import static bednarz.glazer.sakowicz.sso.system.ConstStorage.*;
-
-
 @Component
 @Slf4j
 public class CookieManager {
-    private static final int EMPTY_COOKIE_ID = 0;
     private static final String EMPTY_VALUE = "";
-    private static final long FIVE_MINUTES_IN_SECONDS = 5 * 60;
-    private static final int OTP_COOKIE_NUMBER = 1;
-    private final FrontendServerProperties properties;
-    @Value("${security.app.cookie.expired.time.ms}")
-    private long expirationTime;
-    @Value("${security.app.cookie.name}")
-    private List<String> cookieName;
-    @Value("${security.app.cookie.secret}")
-    private String applicationSecret;
-    @Value("${security.app.cookie.domain}")
+    private static final long ZERO_SECONDS = 0L;
+
+    @Value("${security.cookie.otp.name}")
+    private String otpCookieName;
+    @Value("${security.cookie.otp.secret}")
+    private String otpSecret;
+    @Value("${security.cookie.otp.path}")
+    private String otpCookiePath;
+    @Value("${security.cookie.otp.expiration-time.seconds}")
+    private long otpCookieExpirationTime;
+
+    @Value("${security.cookie.auth.name}")
+    private String authCookieName;
+    @Value("${security.cookie.auth.secret}")
+    private String authSecret;
+    @Value("${security.cookie.auth.path}")
+    private String authCookiePath;
+    @Value("${security.cookie.auth.expiration-time.seconds}")
+    private long authCookieExpirationTime;
+
+    @Value("${security.cookie.domain}")
     private String domain;
 
-    @Autowired
-    public CookieManager(FrontendServerProperties frontendServerProperties) {
-        properties = frontendServerProperties;
+    public Optional<String> getLoginFromOTPCookie(HttpServletRequest request) {
+        return getCookieFromRequest(otpCookieName, request)
+                .flatMap(jwtToken -> decodeJwtToken(jwtToken, otpSecret));
     }
 
-    public Optional<String> getLoginFromOTPCookies(HttpServletRequest request) {
-        return getJwtFromCookies(request, cookieName.get(OTP_COOKIE_NUMBER))
-                .flatMap(jwtToken -> decodeJwtToken(jwtToken, applicationSecret));
-    }
-
-    public Optional<Map<String, String>> getServer(HttpServletRequest request) {
-        //TODO
-        /*String ipAddress = request.getHeader("X-FORWARDED-FOR");
-        if (ipAddress == null) {
-            ipAddress = request.getRemoteAddr();
-        }
-        String finalIpAddress = ipAddress;
-
-        return properties.getConfiguration()
-                .values()
-                .stream()
-                .filter(stringStringMap -> stringStringMap.get(ADDRESS_PROPERTIES).contains(finalIpAddress))
-                .findFirst();*/
-        return properties.getConfiguration().values().stream().findFirst();
-    }
-
-    public Optional<String> getJwtFromCookies(HttpServletRequest request, String cookieName) {
+    private Optional<String> getCookieFromRequest(String cookieName, HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, cookieName);
         return Objects.isNull(cookie) ? Optional.empty() : Optional.of(cookie.getValue());
     }
 
-    public ResponseCookie generateCookie(HttpServletRequest request, String login) {
-        Optional<Map<String, String>> server = getServer(request);
-
-        if (server.isPresent()) {
-            Map<String, String> serverConfiguration = server.get();
-            return generateResponseCookie(
-                    serverConfiguration.get(COOKIE_NAME_PROPERTIES),
-                    serverConfiguration.get(JWT_SECRET_PROPERTIES),
-                    login,
-                    AUTHENTICATED_ENDPOINT,
-                    expirationTime / 1000
-            );
-        } else {
-            return generateEmptyCookie();
-        }
+    public Optional<String> getLoginFromAuthCookie(HttpServletRequest request) {
+        return getCookieFromRequest(authCookieName, request)
+                .flatMap(jwtToken -> decodeJwtToken(jwtToken, authSecret));
     }
 
-    public ResponseCookie[] generateDeleteAuthCookies() {
-        var serversConfigurations = properties.getConfiguration().values();
-        return serversConfigurations.stream()
-                .map(serverConfiguration -> {
-                    String cookieName = serverConfiguration.get(COOKIE_NAME_PROPERTIES);
-                    return generateEmptyCookie(cookieName, AUTHENTICATED_ENDPOINT);
-                })
-                .toArray(ResponseCookie[]::new);
-    }
-
-    public ResponseCookie generateOTPCookie(String login) {
+    public ResponseCookie generateCookie(String login) {
         return generateResponseCookie(
-                cookieName.get(OTP_COOKIE_NUMBER),
-                applicationSecret,
+                authCookieName,
+                authSecret,
                 login,
-                AUTHORIZATION_OTP_ENDPOINT,
-                FIVE_MINUTES_IN_SECONDS
+                authCookiePath,
+                authCookieExpirationTime
         );
     }
 
-    public ResponseCookie generateDeleteOTPCookie() {
-        return generateEmptyCookie(cookieName.get(OTP_COOKIE_NUMBER), AUTHORIZATION_OTP_ENDPOINT);
+    public ResponseCookie generateDeleteAuthCookies() {
+        return generateEmptyCookie(authCookieName, authCookiePath);
     }
 
-    private ResponseCookie generateResponseCookie(
-            String cookieName, String secret, String login, String path, long tokenValidityInSeconds
-    ) {
+    public ResponseCookie generateOTPCookie(String login) {
+        return generateResponseCookie(otpCookieName, otpSecret, login, otpCookiePath, otpCookieExpirationTime);
+    }
+
+    public ResponseCookie generateDeleteOTPCookie() {
+        return generateEmptyCookie(otpCookieName, otpCookiePath);
+    }
+
+    private ResponseCookie generateResponseCookie(String cookieName, String secret, String login, String path,
+                                                  long tokenValidityInSeconds) {
+
         String jwtToken = createJsonWebToken(login, secret);
         return ResponseCookie
                 .from(cookieName, jwtToken)
@@ -122,15 +93,11 @@ public class CookieManager {
                 .build();
     }
 
-    public ResponseCookie generateEmptyCookie() {
-        return generateEmptyCookie(cookieName.get(EMPTY_COOKIE_ID), AUTHENTICATED_ENDPOINT);
-    }
-
-    public ResponseCookie generateEmptyCookie(String name, String path) {
+    private ResponseCookie generateEmptyCookie(String name, String path) {
         return ResponseCookie
                 .from(name, EMPTY_VALUE)
                 .path(path)
-                .maxAge(0)
+                .maxAge(ZERO_SECONDS)
                 .build();
     }
 
@@ -141,7 +108,7 @@ public class CookieManager {
                 .sign(Algorithm.HMAC512(secret));
     }
 
-    public Optional<String> decodeJwtToken(String jwtToken, String secret) {
+    private Optional<String> decodeJwtToken(String jwtToken, String secret) {
         try {
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC512(secret)).build();
             DecodedJWT decodedJWT = jwtVerifier.verify(jwtToken);

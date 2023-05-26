@@ -33,9 +33,9 @@ import static java.util.Collections.singletonList;
 @RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    @Value("${sso.authorization.url}")
+    @Value("${sso.url.authorization}")
     private String authorizationUrl;
-    @Value("${sso.userinfo.url}")
+    @Value("${sso.url.userinfo}")
     private String userInfoUrl;
     @Value("${app.name}")
     private String applicationName;

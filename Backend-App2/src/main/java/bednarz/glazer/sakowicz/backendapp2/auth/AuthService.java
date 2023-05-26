@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    @Value("${sso.logout.url}")
+    @Value("${sso.url.logout}")
     private String logoutUrl;
     private final RestTemplate restTemplate;
 

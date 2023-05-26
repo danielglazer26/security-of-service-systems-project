@@ -24,7 +24,7 @@ import static java.util.stream.Collectors.toSet;
 @RequiredArgsConstructor
 public class TextService {
     private static final int MAX_SSO_USER_INFO_IDS = 30;
-    @Value("${sso.userinfo.url}")
+    @Value("${sso.url.userinfo}")
     private String userInfoUrl;
     @Value("${app.name}")
     private String applicationName;

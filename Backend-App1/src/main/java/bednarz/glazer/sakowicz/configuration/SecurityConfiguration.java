@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfiguration {
-    @Value("${frontend.url}")
+    @Value("${app.frontend.url}")
     private String frontendUrl;
     private final JwtRequestFilter jwtRequestFilter;
     @Bean
@@ -27,16 +27,12 @@ public class SecurityConfiguration {
                 .and()
                     .csrf().disable()
                     .authorizeHttpRequests()
-                    .requestMatchers(HttpMethod.GET, "/api/user/info")
-                    .hasAnyAuthority("USER", "ADMIN", "MODERATOR")
-                    .requestMatchers(HttpMethod.GET, "/api/text")
+                    .requestMatchers(HttpMethod.GET, "/api/user/info", "/api/text", "/api/text/review")
                     .hasAnyAuthority("USER", "ADMIN", "MODERATOR")
                     .requestMatchers(HttpMethod.POST, "/api/text")
                     .hasAnyAuthority("USER", "ADMIN", "MODERATOR")
                     .requestMatchers(HttpMethod.DELETE, "/api/text")
                     .hasAnyAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.GET, "/api/text/review")
-                    .hasAnyAuthority("USER", "ADMIN", "MODERATOR")
                     .requestMatchers(HttpMethod.POST, "/api/text/review")
                     .hasAnyAuthority("ADMIN", "MODERATOR")
                     .anyRequest()

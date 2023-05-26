@@ -21,8 +21,8 @@ public class InitializeData {
 
     @Autowired
     public InitializeData(ApplicationRolesService rolesService, PersonService personService,
-                          @Value("${frontend.server.names}") List<String> clients,
-                          @Value("${sso.name}") String serverName) {
+                          @Value("${app.clients.names}") List<String> clients,
+                          @Value("${app.name}") String serverName) {
         this.rolesService = rolesService;
         this.personService = personService;
         applicationNames = clients;

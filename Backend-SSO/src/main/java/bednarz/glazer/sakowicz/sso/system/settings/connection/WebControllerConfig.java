@@ -1,10 +1,11 @@
 package bednarz.glazer.sakowicz.sso.system.settings.connection;
 
-import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.CookieManager;
-import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.FrontendServerProperties;
-import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.JwtRequestFilter;
 import bednarz.glazer.sakowicz.sso.system.database.services.MyUserDetailsService;
+import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.CookieManager;
+import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.JwtRequestFilter;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,16 +23,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.List;
-
-import static bednarz.glazer.sakowicz.sso.system.ConstStorage.ADDRESS_PROPERTIES;
-
 @Configuration
 @EnableMethodSecurity()
 @EnableWebSecurity
 public class WebControllerConfig {
     private final JwtRequestFilter jwtRequestFilter;
     private final MyUserDetailsService myUserDetailsService;
+    @Value("${app.frontend.url}")
+    private String frontendUrl;
 
     @Autowired
     public WebControllerConfig(CookieManager cookieManager, MyUserDetailsService myUserDetailsService) {
@@ -75,23 +74,15 @@ public class WebControllerConfig {
     }
 
     @Bean
-    public WebMvcConfigurer corsConfigurer(FrontendServerProperties frontendServerProperties) {
+    public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
-            public void addCorsMappings(CorsRegistry registry) {
+            public void addCorsMappings(@NotNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins(getAllAddressesFromProperties(frontendServerProperties).toArray(new String[0]))
+                        .allowedOrigins(frontendUrl)
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowCredentials(true);
             }
         };
-    }
-
-    private static List<String> getAllAddressesFromProperties(FrontendServerProperties frontendServerProperties) {
-        return frontendServerProperties.getConfiguration()
-                .values()
-                .stream()
-                .map(stringStringMap -> stringStringMap.get(ADDRESS_PROPERTIES))
-                .toList();
     }
 }
