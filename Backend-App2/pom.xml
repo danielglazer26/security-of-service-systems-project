@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>bednarz.glazer.sakowicz</groupId>
-	<artifactId>Backend-App1</artifactId>
+	<artifactId>Backend-App2</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Backend-App1</name>
-	<description>First App Backend</description>
+	<name>Backend-App2</name>
+	<description>Second App Backend</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>

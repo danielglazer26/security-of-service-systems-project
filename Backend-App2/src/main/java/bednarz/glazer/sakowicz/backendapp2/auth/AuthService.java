@@ -1,4 +1,4 @@
-package bednarz.glazer.sakowicz.auth;
+package bednarz.glazer.sakowicz.backendapp2.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

@@ -1,12 +1,12 @@
-package bednarz.glazer.sakowicz.text;
+package bednarz.glazer.sakowicz.backendapp2.text;
 
-import bednarz.glazer.sakowicz.text.dto.NewTextDto;
-import bednarz.glazer.sakowicz.text.dto.TextDto;
-import bednarz.glazer.sakowicz.text.dto.TextReviewDto;
-import bednarz.glazer.sakowicz.text.exception.TextNotFoundException;
-import bednarz.glazer.sakowicz.userinfo.Role;
-import bednarz.glazer.sakowicz.userinfo.UserInfo;
-import bednarz.glazer.sakowicz.userinfo.UserInfoRequest;
+import bednarz.glazer.sakowicz.backendapp2.text.dto.NewTextDto;
+import bednarz.glazer.sakowicz.backendapp2.text.dto.TextDto;
+import bednarz.glazer.sakowicz.backendapp2.text.dto.TextReviewDto;
+import bednarz.glazer.sakowicz.backendapp2.text.exception.TextNotFoundException;
+import bednarz.glazer.sakowicz.backendapp2.userinfo.Role;
+import bednarz.glazer.sakowicz.backendapp2.userinfo.UserInfo;
+import bednarz.glazer.sakowicz.backendapp2.userinfo.UserInfoRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

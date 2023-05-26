@@ -16,7 +16,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
     private final PersonService personService;
 
-    @Value("${sso.name}")
+    @Value("${app.name}")
     private String serverName;
 
     @Autowired

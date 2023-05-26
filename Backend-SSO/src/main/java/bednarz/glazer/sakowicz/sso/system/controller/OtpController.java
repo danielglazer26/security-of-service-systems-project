@@ -28,7 +28,7 @@ public class OtpController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginToAccountOTP(HttpServletRequest request, @RequestParam String verificationCode) {
+    public ResponseEntity<?> loginToAccountOTP(@RequestParam String verificationCode) {
         AccountData accountData = (AccountData) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Person otpUser = accountData.getPerson();
@@ -37,10 +37,10 @@ public class OtpController {
         }
 
         ResponseCookie deleteOTPCookie = cookieManager.generateDeleteOTPCookie();
-        ResponseCookie responseCookie = cookieManager.generateCookie(request, accountData.getUsername());
-        return ResponseEntity.ok()
+        ResponseCookie responseCookie = cookieManager.generateCookie(accountData.getUsername());
+        return ResponseEntity.noContent()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString(), deleteOTPCookie.toString())
-                .body(otpUser);
+                .build();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

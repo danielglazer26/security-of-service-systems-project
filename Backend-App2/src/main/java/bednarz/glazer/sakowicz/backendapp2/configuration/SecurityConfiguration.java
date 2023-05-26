@@ -1,4 +1,4 @@
-package bednarz.glazer.sakowicz.configuration;
+package bednarz.glazer.sakowicz.backendapp2.configuration;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -23,22 +23,22 @@ public class SecurityConfiguration {
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.cors()
                 .and()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .csrf().disable()
-                    .authorizeHttpRequests()
-                    .requestMatchers(HttpMethod.GET, "/api/user/info", "/api/text", "/api/text/review")
-                    .hasAnyAuthority("USER", "ADMIN", "MODERATOR")
-                    .requestMatchers(HttpMethod.POST, "/api/text")
-                    .hasAnyAuthority("USER", "ADMIN", "MODERATOR")
-                    .requestMatchers(HttpMethod.DELETE, "/api/text")
-                    .hasAnyAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.POST, "/api/text/review")
-                    .hasAnyAuthority("ADMIN", "MODERATOR")
-                    .anyRequest()
-                    .authenticated()
+                .csrf().disable()
+                .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.GET, "/api/user/info", "/api/text", "/api/text/review")
+                .hasAnyAuthority("USER", "ADMIN", "MODERATOR")
+                .requestMatchers(HttpMethod.POST, "/api/text")
+                .hasAnyAuthority("USER", "ADMIN", "MODERATOR")
+                .requestMatchers(HttpMethod.DELETE, "/api/text")
+                .hasAnyAuthority("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/text/review")
+                .hasAnyAuthority("ADMIN", "MODERATOR")
+                .anyRequest()
+                .authenticated()
                 .and()
-                    .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,11 +16,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.Optional;
-
-import static bednarz.glazer.sakowicz.sso.system.ConstStorage.COOKIE_NAME_PROPERTIES;
-import static bednarz.glazer.sakowicz.sso.system.ConstStorage.JWT_SECRET_PROPERTIES;
 
 
 @Slf4j
@@ -33,10 +30,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response,
+                                    @NotNull FilterChain filterChain) throws ServletException, IOException {
 
-        Optional<String> login = cookieManager.getLoginFromOTPCookies(request);
+        Optional<String> login = cookieManager.getLoginFromOTPCookie(request);
 
         if (login.isPresent()) {
             validateUsername(request, response, filterChain, login.get());
@@ -45,19 +42,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
     }
 
-    private void validateDataFromAnotherApplication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-        Optional<Map<String, String>> serverDataOpt = cookieManager.getServer(request);
+    private void validateDataFromAnotherApplication(HttpServletRequest request, HttpServletResponse response,
+                                                    FilterChain filterChain) throws ServletException, IOException {
 
-        if (serverDataOpt.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
-        Map<String, String> serverData = serverDataOpt.get();
-        String cookieName = serverData.get(COOKIE_NAME_PROPERTIES);
-        Optional<String> login = cookieManager.getJwtFromCookies(request, cookieName)
-                .flatMap(jwtToken -> cookieManager.decodeJwtToken(jwtToken, serverData.get(JWT_SECRET_PROPERTIES)));
+        Optional<String> login = cookieManager.getLoginFromAuthCookie(request);
 
         if (login.isPresent()) {
             validateUsername(request, response, filterChain, login.get());
