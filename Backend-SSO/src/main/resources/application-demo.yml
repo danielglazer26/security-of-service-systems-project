@@ -3,6 +3,7 @@ spring:
     url: jdbc:postgresql://localhost:5433/sso-db
     username: sso
     password: password
+    driver-class-name: org.postgresql.Driver
   jpa:
 #    hibernate:
 #      ddl-auto: create
