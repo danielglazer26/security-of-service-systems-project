@@ -86,7 +86,7 @@ public class AccountController {
 
     @GetMapping("/logout")
     public ResponseEntity<Void> logout() {
-        ResponseCookie deleteAuthCookie = cookieManager.generateDeleteAuthCookies();
+        ResponseCookie deleteAuthCookie = cookieManager.generateDeleteAuthCookie();
         return ResponseEntity.noContent()
                 .header(HttpHeaders.SET_COOKIE, deleteAuthCookie.toString())
                 .build();

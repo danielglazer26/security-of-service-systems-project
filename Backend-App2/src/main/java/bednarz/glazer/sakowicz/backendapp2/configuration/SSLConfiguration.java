@@ -1,31 +1,52 @@
 package bednarz.glazer.sakowicz.backendapp2.configuration;
 
-import jakarta.annotation.PostConstruct;
-import lombok.SneakyThrows;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.web.server.Ssl;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ResourceLoader;
 
-import java.nio.file.Paths;
+import javax.net.ssl.*;
+import java.io.IOException;
+import java.security.*;
+import java.security.cert.CertificateException;
 
 @Configuration
 public class SSLConfiguration {
     private final Ssl sslProperties;
-    private final ResourceLoader resourceLoader;
 
-    public SSLConfiguration(ServerProperties serverProperties, ResourceLoader resourceLoader) {
+    public SSLConfiguration(ServerProperties serverProperties) {
         sslProperties = serverProperties.getSsl();
-        this.resourceLoader = resourceLoader;
     }
 
-    @SneakyThrows
-    @PostConstruct
-    private void configureSSL() {
-        System.setProperty("https.protocols", sslProperties.getProtocol());
-        System.setProperty("javax.net.ssl.trustStore", Paths.get(resourceLoader.getResource(sslProperties.getTrustStore()).getURI()).toString());
-        System.setProperty("javax.net.ssl.trustStorePassword", sslProperties.getTrustStorePassword());
-        System.setProperty("javax.net.ssl.trustStoreType", sslProperties.getTrustStoreType());
-        System.setProperty("javax.net.ssl.trustStoreProvider", sslProperties.getTrustStoreProvider());
+    @Bean
+    protected SSLContext sslContext() {
+        SSLContext sslContext;
+        try(var keyStoreStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(sslProperties.getKeyStore().split(":")[1]);
+            var trustStoreStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(sslProperties.getTrustStore().split(":")[1])) {
+
+            sslContext = SSLContext.getInstance("SSL");
+
+            KeyStore keyStore = KeyStore.getInstance(sslProperties.getKeyStoreType());
+            char[] keyPassword = sslProperties.getKeyStorePassword().toCharArray();
+            keyStore.load(keyStoreStream, keyPassword);
+            KeyManagerFactory keyFactory = KeyManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            keyFactory.init(keyStore, keyPassword);
+
+            KeyStore trustStore = KeyStore.getInstance(sslProperties.getTrustStoreType());
+            char[] trustPassword = sslProperties.getTrustStorePassword().toCharArray();
+            trustStore.load(trustStoreStream, trustPassword);
+            TrustManagerFactory trustFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustFactory.init(trustStore);
+            TrustManager[] trustManagers = trustFactory.getTrustManagers();
+
+            KeyManager[] keyManagers = keyFactory.getKeyManagers();
+            sslContext.init(keyManagers, trustManagers, null);
+            SSLContext.setDefault(sslContext);
+        } catch (IOException | UnrecoverableKeyException | CertificateException | KeyStoreException |
+                 NoSuchAlgorithmException | KeyManagementException e) {
+            throw new RuntimeException(e);
+        }
+
+        return sslContext;
     }
 }

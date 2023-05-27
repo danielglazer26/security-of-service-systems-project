@@ -67,7 +67,7 @@ public class CookieManager {
         );
     }
 
-    public ResponseCookie generateDeleteAuthCookies() {
+    public ResponseCookie generateDeleteAuthCookie() {
         return generateEmptyCookie(authCookieName, authCookiePath);
     }
 

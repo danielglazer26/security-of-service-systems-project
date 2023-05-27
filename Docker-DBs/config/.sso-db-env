@@ -1,0 +1,4 @@
+SSO_USER=sso
+SSO_USER_PASSWORD=password
+SSO_DB=sso-db
+POSTGRES_PASSWORD=postgres

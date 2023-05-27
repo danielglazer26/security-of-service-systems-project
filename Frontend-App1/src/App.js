@@ -1,7 +1,8 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
 import { Home } from './Home';
-import { UserPage } from './UserPage';
+// import UserPage from './UserPage';
+import UserPage from './UserPage2';
 import { Routes, Route, useNavigate } from "react-router-dom";
 import axios from './api/axios';
 

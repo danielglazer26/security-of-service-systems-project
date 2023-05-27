@@ -8,15 +8,6 @@ server:
     key-store-provider: SUN
     enabled: true
 
-spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sso
-    password: password
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-
 security:
   cookie:
     domain: localhost

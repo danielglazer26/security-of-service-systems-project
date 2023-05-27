@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5434/app1-db
+    username: app1
+    password: password
+  jpa:
+#    hibernate:
+#      ddl-auto: create
+    database-platform: org.hibernate.dialect.PostgreSQLDialect

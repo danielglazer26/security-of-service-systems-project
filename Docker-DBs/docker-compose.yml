@@ -1,0 +1,27 @@
+name: sso-system-dbs
+services:
+  sso-db:
+    image: postgres
+    volumes:
+      - ./config/init_db.sh:/docker-entrypoint-initdb.d/init_db.sh
+      - ./data/sso:/var/lib/postgresql/data
+    restart: always
+    env_file:
+      - config/.sso-db-env
+    healthcheck:
+      test: "exit 0"
+    ports:
+      - '5433:5432'
+
+  app1-db:
+    image: postgres
+    volumes:
+      - ./config/init_db.sh:/docker-entrypoint-initdb.d/init_db.sh
+      - ./data/app1:/var/lib/postgresql/data
+    restart: always
+    env_file:
+      - config/.app1-db-env
+    healthcheck:
+      test: "exit 0"
+    ports:
+      - '5434:5432'
