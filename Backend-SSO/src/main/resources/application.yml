@@ -23,6 +23,16 @@ security:
       path: /api
       expiration-time:
         seconds: 1800
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sso
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+
 app:
   name: DEW_SSO
   frontend:
