@@ -55,15 +55,6 @@ public class AccountController {
                 .body(person.getPersonId());
     }
 
-    @PostMapping("/user/info")
-    public ResponseEntity<?> usersInfo(@RequestBody UserInfoRequest userInfoRequest) {
-        var body = personService.getAllPeopleByIdsAndFilterApplicationName(userInfoRequest.usersId(),
-                userInfoRequest.applicationName()).stream()
-                .map(Person::toUserInfo)
-                .toList();
-        return ResponseEntity.ok(body);
-    }
-
     @PostMapping("/login")
     public ResponseEntity<?> loginToAccount(@RequestBody LoginRequest loginRequest) {
         Authentication authentication;
