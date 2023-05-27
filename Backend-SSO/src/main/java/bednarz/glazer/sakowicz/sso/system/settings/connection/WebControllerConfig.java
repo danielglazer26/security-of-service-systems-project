@@ -2,6 +2,7 @@ package bednarz.glazer.sakowicz.sso.system.settings.connection;
 
 import bednarz.glazer.sakowicz.sso.system.database.services.MyUserDetailsService;
 import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.ApiKeyRequestFilter;
+import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.ApiKeysConfiguration;
 import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.CookieManager;
 import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.JwtRequestFilter;
 import jakarta.validation.constraints.NotNull;
@@ -35,11 +36,10 @@ public class WebControllerConfig {
     private String frontendUrl;
 
     @Autowired
-    public WebControllerConfig(CookieManager cookieManager, MyUserDetailsService myUserDetailsService) {
+    public WebControllerConfig(CookieManager cookieManager, MyUserDetailsService myUserDetailsService, ApiKeysConfiguration apiKeysConfiguration) {
         this.jwtRequestFilter = new JwtRequestFilter(cookieManager, myUserDetailsService);
         this.myUserDetailsService = myUserDetailsService;
-        // TODO - dodać do propertiesów
-        this.apiKeyRequestFilter = new ApiKeyRequestFilter("header");
+        this.apiKeyRequestFilter = new ApiKeyRequestFilter(apiKeysConfiguration);
     }
 
     @Bean

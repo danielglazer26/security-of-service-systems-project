@@ -4,6 +4,7 @@ import bednarz.glazer.sakowicz.sso.system.database.model.ApplicationRole;
 import bednarz.glazer.sakowicz.sso.system.database.model.Roles;
 import bednarz.glazer.sakowicz.sso.system.database.services.ApplicationRolesService;
 import bednarz.glazer.sakowicz.sso.system.database.services.PersonService;
+import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.ApiKeysConfiguration;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.ApiKeysConfiguration.APP_NAME;
 
 @Component
 public class InitializeData {
@@ -21,11 +25,14 @@ public class InitializeData {
 
     @Autowired
     public InitializeData(ApplicationRolesService rolesService, PersonService personService,
-                          @Value("${app.clients.names}") List<String> clients,
+                          ApiKeysConfiguration apiKeysConfiguration,
                           @Value("${app.name}") String serverName) {
         this.rolesService = rolesService;
         this.personService = personService;
-        applicationNames = clients;
+        applicationNames = apiKeysConfiguration.getClients()
+                .values()
+                .stream().map(client -> client.get(APP_NAME))
+                .collect(Collectors.toList());
         applicationNames.add(serverName);
     }
 

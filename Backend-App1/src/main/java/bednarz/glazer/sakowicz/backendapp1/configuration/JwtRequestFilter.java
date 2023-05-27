@@ -1,5 +1,8 @@
 package bednarz.glazer.sakowicz.backendapp1.configuration;
 
+import bednarz.glazer.sakowicz.backendapp1.requests.BodyRequestType;
+import bednarz.glazer.sakowicz.backendapp1.requests.HeaderRequestType;
+import bednarz.glazer.sakowicz.backendapp1.requests.RequestFactory;
 import bednarz.glazer.sakowicz.backendapp1.userinfo.UserInfo;
 import bednarz.glazer.sakowicz.backendapp1.userinfo.UserInfoRequest;
 import jakarta.servlet.FilterChain;
@@ -9,7 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -33,12 +35,8 @@ import static java.util.Collections.singletonList;
 @RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    @Value("${sso.url.authorization}")
-    private String authorizationUrl;
-    @Value("${sso.url.userinfo}")
-    private String userInfoUrl;
-    @Value("${app.name}")
-    private String applicationName;
+    private final RequestFactory requestFactory;
+
     private final RestTemplate restTemplate;
 
     @Override
@@ -47,10 +45,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                                     @NotNull FilterChain filterChain)
             throws ServletException, IOException {
 
-        RequestEntity<Void> verifyRequest = RequestEntity
-                .get(authorizationUrl)
-                .header(HttpHeaders.COOKIE, request.getHeader("Cookie"))
-                .build();
+        RequestEntity<Void> verifyRequest =
+                requestFactory.buildGetRequest(HeaderRequestType.AUTHORIZATION, request).build();
 
         ResponseEntity<Long> verifyResponse;
 
@@ -66,11 +62,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             cookiesToSet.forEach(cookie -> response.addHeader(HttpHeaders.SET_COOKIE, cookie));
         }
 
-        RequestEntity<UserInfoRequest> userInfoRequest = RequestEntity
-                .post(userInfoUrl)
-                .header(HttpHeaders.COOKIE, request.getHeader("Cookie"))
-                .header("header", "value")
-                .body(new UserInfoRequest(singletonList(verifyResponse.getBody()), applicationName));
+        RequestEntity<UserInfoRequest> userInfoRequest = requestFactory.buildPostRequest(BodyRequestType.USER_INFO, request)
+                .body(new UserInfoRequest(singletonList(verifyResponse.getBody())));
 
         ResponseEntity<UserInfo[]> userInfoResponseEntity;
 

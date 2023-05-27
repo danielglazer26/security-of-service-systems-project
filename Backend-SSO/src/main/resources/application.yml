@@ -28,4 +28,9 @@ app:
   frontend:
     url: https://localhost:3000
   clients:
-    names: app1, app2
+    v7cvQIayD03nBEiNaCmo:
+      app-name: app1
+      credential: app1-credential
+    zOn1klp7Srfhz97RHmqu:
+      app-name: app2
+      credential: app2-credential
