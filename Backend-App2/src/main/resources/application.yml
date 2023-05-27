@@ -14,7 +14,6 @@ server:
     protocol: TLSv1.3
 
 app:
-  name: app2
   frontend:
     url: https://localhost:3002
 
@@ -24,3 +23,5 @@ sso:
     authorization: ${sso.url.base}/api/auth/verify
     logout: ${sso.url.base}/api/auth/logout
     userinfo: ${sso.url.base}/api/auth/user/info
+  api-key: zOn1klp7Srfhz97RHmqu
+  api-credential: app2-credential

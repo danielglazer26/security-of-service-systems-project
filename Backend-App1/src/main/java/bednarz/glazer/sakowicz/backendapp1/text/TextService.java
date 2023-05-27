@@ -1,5 +1,7 @@
 package bednarz.glazer.sakowicz.backendapp1.text;
 
+import bednarz.glazer.sakowicz.backendapp1.requests.BodyRequestType;
+import bednarz.glazer.sakowicz.backendapp1.requests.RequestFactory;
 import bednarz.glazer.sakowicz.backendapp1.text.dto.NewTextDto;
 import bednarz.glazer.sakowicz.backendapp1.text.dto.TextDto;
 import bednarz.glazer.sakowicz.backendapp1.text.dto.TextReviewDto;
@@ -9,8 +11,6 @@ import bednarz.glazer.sakowicz.backendapp1.userinfo.UserInfo;
 import bednarz.glazer.sakowicz.backendapp1.userinfo.UserInfoRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,12 +24,10 @@ import static java.util.stream.Collectors.toSet;
 @RequiredArgsConstructor
 public class TextService {
     private static final int MAX_SSO_USER_INFO_IDS = 30;
-    @Value("${sso.url.userinfo}")
-    private String userInfoUrl;
-    @Value("${app.name}")
-    private String applicationName;
+
     private final TextRepository textRepository;
     private final RestTemplate restTemplate;
+    private final RequestFactory requestFactory;
 
     public List<TextDto> getReviewedTextsFor(UserInfo user, HttpServletRequest request) {
         if (user.role() == Role.USER) {
@@ -107,10 +105,8 @@ public class TextService {
     }
 
     private List<String> getUsernamesFor(List<Long> ids, HttpServletRequest request) {
-        RequestEntity<UserInfoRequest> requestEntity = RequestEntity
-                .post(userInfoUrl)
-                .header(HttpHeaders.COOKIE, request.getHeader("Cookie"))
-                .body(new UserInfoRequest(ids, applicationName));
+        RequestEntity<UserInfoRequest> requestEntity =
+                requestFactory.buildPostRequest(BodyRequestType.USER_INFO, request).body(new UserInfoRequest(ids));
 
         ResponseEntity<UserInfo[]> usernamesResponse = restTemplate.exchange(requestEntity, UserInfo[].class);
         return Arrays.stream(Objects.requireNonNull(usernamesResponse.getBody()))
