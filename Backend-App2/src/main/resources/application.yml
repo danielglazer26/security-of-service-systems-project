@@ -13,15 +13,6 @@ server:
     enabled: true
     protocol: TLSv1.3
 
-spring:
-  datasource:
-    url: jdbc:h2:mem:db-app2
-    driverClassName: org.h2.Driver
-    username: app2
-    password: password
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-
 app:
   name: app2
   frontend:

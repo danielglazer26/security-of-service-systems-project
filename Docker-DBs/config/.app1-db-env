@@ -1,0 +1,4 @@
+SSO_USER=app1
+SSO_USER_PASSWORD=password
+SSO_DB=app1-db
+POSTGRES_PASSWORD=postgres

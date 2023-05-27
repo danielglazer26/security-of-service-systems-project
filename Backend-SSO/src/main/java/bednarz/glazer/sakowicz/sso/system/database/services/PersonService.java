@@ -74,6 +74,9 @@ public class PersonService {
     }
 
     public Person savePerson(String username, String password, String email, List<ApplicationRole> roles) {
+        if (personRepository.findByUsername(username).isPresent()) {
+            return null;
+        }
         return personRepository.save(new Person(username, generateHash(password), email, roles));
     }
 

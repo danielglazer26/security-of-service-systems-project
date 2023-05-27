@@ -9,7 +9,6 @@ import bednarz.glazer.sakowicz.sso.system.database.services.AccountData;
 import bednarz.glazer.sakowicz.sso.system.database.services.PersonService;
 import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.CookieManager;
 import bednarz.glazer.sakowicz.sso.system.settings.connection.otp.OtpManager;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -25,9 +24,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -99,7 +96,7 @@ public class AccountController {
 
     @GetMapping("/logout")
     public ResponseEntity<Void> logout() {
-        ResponseCookie deleteAuthCookie = cookieManager.generateDeleteAuthCookies();
+        ResponseCookie deleteAuthCookie = cookieManager.generateDeleteAuthCookie();
         return ResponseEntity.noContent()
                 .header(HttpHeaders.SET_COOKIE, deleteAuthCookie.toString())
                 .build();
