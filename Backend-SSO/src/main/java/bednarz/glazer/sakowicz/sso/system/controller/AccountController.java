@@ -3,7 +3,6 @@ package bednarz.glazer.sakowicz.sso.system.controller;
 import bednarz.glazer.sakowicz.sso.system.controller.requests.LoginRequest;
 import bednarz.glazer.sakowicz.sso.system.controller.requests.RegisterRequest;
 import bednarz.glazer.sakowicz.sso.system.controller.requests.ResponseJsonBody;
-import bednarz.glazer.sakowicz.sso.system.controller.requests.UserInfoRequest;
 import bednarz.glazer.sakowicz.sso.system.database.model.Person;
 import bednarz.glazer.sakowicz.sso.system.database.services.AccountData;
 import bednarz.glazer.sakowicz.sso.system.database.services.PersonService;
@@ -53,15 +52,6 @@ public class AccountController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(person.getPersonId());
-    }
-
-    @PostMapping("/user/info")
-    public ResponseEntity<?> usersInfo(@RequestBody UserInfoRequest userInfoRequest) {
-        var body = personService.getAllPeopleByIdsAndFilterApplicationName(userInfoRequest.usersId(),
-                userInfoRequest.applicationName()).stream()
-                .map(Person::toUserInfo)
-                .toList();
-        return ResponseEntity.ok(body);
     }
 
     @PostMapping("/login")
