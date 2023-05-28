@@ -15,7 +15,7 @@ export const Home = () => {
   return (
     <div className="home-container">
       <div className="background-image"></div> 
-      <div className="content-container">
+      <div className="content-container-home">
         <h1 className="home-title">Home</h1>
         <div className="button-container">
           <button className="sign-in-button" onClick={handleSignIn}>Sign In</button>
