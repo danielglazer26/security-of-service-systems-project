@@ -30,9 +30,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return request.getRequestURI().startsWith("/key/api");
+    }
+
+    @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response,
                                     @NotNull FilterChain filterChain) throws ServletException, IOException {
-
         Optional<String> login = cookieManager.getLoginFromOTPCookie(request);
 
         if (login.isPresent()) {
@@ -44,7 +48,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private void validateDataFromAnotherApplication(HttpServletRequest request, HttpServletResponse response,
                                                     FilterChain filterChain) throws ServletException, IOException {
-
         Optional<String> login = cookieManager.getLoginFromAuthCookie(request);
 
         if (login.isPresent()) {

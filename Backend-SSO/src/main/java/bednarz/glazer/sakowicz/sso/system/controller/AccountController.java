@@ -3,7 +3,6 @@ package bednarz.glazer.sakowicz.sso.system.controller;
 import bednarz.glazer.sakowicz.sso.system.controller.requests.LoginRequest;
 import bednarz.glazer.sakowicz.sso.system.controller.requests.RegisterRequest;
 import bednarz.glazer.sakowicz.sso.system.controller.requests.ResponseJsonBody;
-import bednarz.glazer.sakowicz.sso.system.controller.requests.UserInfoRequest;
 import bednarz.glazer.sakowicz.sso.system.database.model.Person;
 import bednarz.glazer.sakowicz.sso.system.database.services.AccountData;
 import bednarz.glazer.sakowicz.sso.system.database.services.PersonService;
