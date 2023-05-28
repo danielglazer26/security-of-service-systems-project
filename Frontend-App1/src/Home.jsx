@@ -14,7 +14,7 @@ export const Home = () => {
 
   return (
     <div className="home-container">
-      <div className="background-image"></div> {/* Add a div for the background image */}
+      <div className="background-image"></div> 
       <div className="content-container">
         <h1 className="home-title">Home</h1>
         <div className="button-container">
