@@ -11,6 +11,8 @@ const UserPage = () => {
     const [text, setText] = useState('');
     const [textsToReview, setTextsToReview] = useState([]);
     const [reviewedTexts, setReviewedTexts] = useState([]);
+    const [editingTextId, setEditingTextId] = useState(null);
+    const [editedText, setEditedText] = useState('');
 
     const GET_TEXTS_URL = "api/text/review";
     const GET_REVIEWED_TEXTS_URL = "api/text";
@@ -21,7 +23,9 @@ const UserPage = () => {
     // Fetch initial data on component mount
     useEffect(() => {
         fetchTextsToReview();
+        console.log(`To review: ${textsToReview}`)
         fetchReviewedTexts();
+        console.log(`Reviewed: ${reviewedTexts}`)
     }, []);
 
     // Logout
@@ -67,8 +71,10 @@ const UserPage = () => {
           // console.log('Text submitted:', response.data);
           // Clear the text input after submission
           setText('');
+          window.alert('Your text was submitted successfully :)');
         } catch (error) {
           console.error('Text submission error:', error);
+          window.alert('Error: ', error);
         }
       };
 
@@ -104,6 +110,47 @@ const UserPage = () => {
         }
       };
 
+      const handleReviewedTextEdit = async (textId, textContent) => {
+        if (editingTextId === textId) {
+          // Submit edited text
+          try {
+            const requestBody = {
+              reviewedTextId: textId,
+              content: editedText,
+            };
+        
+            const response = await axios.post(
+              POST_REVIEWED_TEXT_URL,
+              requestBody,
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                withCredentials: true,
+              }
+            );
+        
+            // Handle the response as needed
+            console.log('Reviewed text submitted:', response.data);
+        
+            // Reset editing state
+            setEditingTextId(null);
+            setEditedText('');
+        
+            // Fetch updated review texts
+            fetchTextsToReview();
+            fetchReviewedTexts();
+          } catch (error) {
+            console.error('Reviewed text submission error:', error);
+          }
+        } else {
+          // Start editing the text
+          setEditingTextId(textId);
+          setEditedText(textContent);
+        }
+      };
+      
+
       const handleDelete = async (textId) => {
         try {
           await axios.delete(`${GET_REVIEWED_TEXTS_URL}?id=${textId}`, { withCredentials: true });
@@ -113,45 +160,75 @@ const UserPage = () => {
         }
       };
 
-    //   const handleEdit = (textId, content) => {
-    //     // Find the text to edit
-    //     const textToEdit = reviewTexts.find((text) => text.reviewedTextId === textId);
-    //     if (textToEdit) {
-    //       // Set the text to edit in the state
-    //       setText(content);
-    //       // Remove the text from the reviewTexts list
-    //       setReviewTexts(reviewTexts.filter((text) => text.reviewedTextId !== textId));
-    //     }
-    //   };
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-          <h1>User Page</h1>
-          {/* Add your UserPage content */}
-          <p>{data.role}</p>
-      
-          <div>
-            <button onClick={handleLogout}>Logout</button>
-          </div>
-          <form onSubmit={handleNewTextSubmit}>
-            <input
-              type="text"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder="Enter text"
-            />
-            <button type="submit">Submit</button>
-          </form>
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <div>
-              <h2>Texts to Review</h2>
+      <div className="user-page-container">
+        <h1 className="user-page-heading">User Page</h1>
+        <p className="user-role">{data.role}</p>
+    
+        <div className="logout-container">
+          <button className="logout-button" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
+    
+        <form onSubmit={handleNewTextSubmit} className="text-submit-form">
+          <input
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="Enter text"
+            className="text-input"
+          />
+          <button type="submit" className="submit-button">
+            Submit
+          </button>
+        </form>
+    
+        {(data.role === 'ADMIN' || data.role === 'MODERATOR') && (
+          <div className="content-container">
+            <div className="text-review-container">
+              <h2 className="section-heading">Texts to Review</h2>
               {textsToReview.length > 0 ? (
-                <ul style={{ listStyle: 'none', padding: 0 }}>
+                <ul className="text-list">
                   {textsToReview.map((text) => (
-                    <li key={text.id} style={{ display: 'flex', alignItems: 'center' }}>
-                      <p style={{ marginRight: '10px' }}>{text.content}</p>
-                      {(data.role === "ADMIN" || data.role === "MODERATOR") && (
-                        <button onClick={() => handleReviewedTextSubmit(text.id, text.content)}>Submit</button>
+                    <li key={text.id} className="text-item">
+                      {editingTextId === text.id ? (
+                        <>
+                          <input
+                            type="text"
+                            value={editedText}
+                            onChange={(e) => setEditedText(e.target.value)}
+                            placeholder="Edit text"
+                            className="edit-input"
+                          />
+                          <button
+                            onClick={() => handleReviewedTextEdit(text.id, text.content)}
+                            className="edit-button"
+                          >
+                            OK
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-content">{text.content}</p>
+                          {(data.role === 'ADMIN' || data.role === 'MODERATOR') && (
+                            <>
+                              <button
+                                onClick={() => handleReviewedTextSubmit(text.id, text.content)}
+                                className="review-submit-button"
+                              >
+                                Submit
+                              </button>
+                              <button
+                                onClick={() => handleReviewedTextEdit(text.id, text.content)}
+                                className="review-submit-button"
+                              >
+                                Edit
+                              </button>
+                            </>
+                          )}
+                        </>
                       )}
                     </li>
                   ))}
@@ -160,27 +237,230 @@ const UserPage = () => {
                 <p>No texts to review</p>
               )}
             </div>
-            <div>
-              <h2>Reviewed Texts</h2>
-              {reviewedTexts.length > 0 ? (
-                <ul style={{ listStyle: 'none', padding: 0 }}>
-                  {reviewedTexts.map((text) => (
-                    <li key={text.id} style={{ display: 'flex', alignItems: 'center' }}>
-                      <p style={{ marginRight: '10px' }}>{text.content}</p>
-                      {data.role === "ADMIN" && (
-                        <button onClick={() => handleDelete(text.id)}>Delete</button>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No reviewed texts</p>
-              )}
-            </div>
+          </div>
+        )}
+    
+        <div className="content-container">
+          <div className="reviewed-texts-container">
+            <h2 className="section-heading">Reviewed Texts</h2>
+            {reviewedTexts.length > 0 ? (
+              <ul className="text-list">
+                {reviewedTexts.map((text) => (
+                  <li key={text.id} className="text-item">
+                    <p className="text-content">{text.content}</p>
+                    {data.role === 'ADMIN' && (
+                      <button onClick={() => handleDelete(text.id)} className="delete-button">
+                        Delete
+                      </button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No reviewed texts</p>
+            )}
           </div>
         </div>
-      );
-    }
+      </div>
+    );
+    
+  }    
+  //   return (
+  //     <div className="user-page-container">
+  //       <h1 className="user-page-heading">User Page</h1>
+  //       <p className="user-role">{data.role}</p>
+    
+  //       <div className="logout-container">
+  //         <button className="logout-button" onClick={handleLogout}>Logout</button>
+  //       </div>
+    
+  //       <form onSubmit={handleNewTextSubmit} className="text-submit-form">
+  //         <input
+  //           type="text"
+  //           value={text}
+  //           onChange={(e) => setText(e.target.value)}
+  //           placeholder="Enter text"
+  //           className="text-input"
+  //         />
+  //         <button type="submit" className="submit-button">Submit</button>
+  //       </form>
+    
+  //       {(data.role === 'ADMIN' || data.role === 'MODERATOR') && (
+  //         <div className="content-container">
+  //           <div className="text-review-container">
+  //             <h2 className="section-heading">Texts to Review</h2>
+  //             {textsToReview.length > 0 ? (
+  //               <ul className="text-list">
+  //                 {textsToReview.map((text) => (
+  //                   <li key={text.id} className="text-item">
+  //                     <p className="text-content">{text.content}</p>
+  //                     {(data.role === 'ADMIN' || data.role === 'MODERATOR') && (
+  //                       <button
+  //                         onClick={() => handleReviewedTextSubmit(text.id, text.content)}
+  //                         className="review-submit-button"
+  //                       >
+  //                         Submit
+  //                       </button>
+  //                     )}
+  //                   </li>
+  //                 ))}
+  //               </ul>
+  //             ) : (
+  //               <p>No texts to review</p>
+  //             )}
+  //           </div>
+  //         </div>
+  //       )}
+    
+  //       <div className="content-container">
+  //         <div className="reviewed-texts-container">
+  //           <h2 className="section-heading">Reviewed Texts</h2>
+  //           {reviewedTexts.length > 0 ? (
+  //             <ul className="text-list">
+  //               {reviewedTexts.map((text) => (
+  //                 <li key={text.id} className="text-item">
+  //                   <p className="text-content">{text.content}</p>
+  //                   {data.role === 'ADMIN' && (
+  //                     <button onClick={() => handleDelete(text.id)} className="delete-button">
+  //                       Delete
+  //                     </button>
+  //                   )}
+  //                 </li>
+  //               ))}
+  //             </ul>
+  //           ) : (
+  //             <p>No reviewed texts</p>
+  //           )}
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+    // return (
+    //     <div className="user-page-container">
+    //       <h1 className="user-page-heading">User Page</h1>
+    //       <p className="user-role">{data.role}</p>
+
+    //       <div className="logout-container">
+    //         <button className="logout-button" onClick={handleLogout}>Logout</button>
+    //       </div>
+      
+    //       <form onSubmit={handleNewTextSubmit} className="text-submit-form">
+    //         <input
+    //           type="text"
+    //           value={text}
+    //           onChange={(e) => setText(e.target.value)}
+    //           placeholder="Enter text"
+    //           className="text-input"
+    //         />
+    //         <button type="submit" className="submit-button">Submit</button>
+    //       </form>
+
+    //       <div className="content-container">
+    //       {(data.role === 'ADMIN' || data.role === 'MODERATOR') && (
+    //         <div className="text-review-container">
+    //           <h2 className="section-heading">Texts to Review</h2>
+    //           {textsToReview.length > 0 ? (
+    //             <ul className="text-list">
+    //               {textsToReview.map((text) => (
+    //                 <li key={text.id} className="text-item">
+    //                   <p className="text-content">{text.content}</p>
+    //                   {(data.role === 'ADMIN' || data.role === 'MODERATOR') && (
+    //                     <button
+    //                       onClick={() => handleReviewedTextSubmit(text.id, text.content)}
+    //                       className="review-submit-button"
+    //                     >
+    //                       Submit
+    //                     </button>
+    //                   )}
+    //                 </li>
+    //               ))}
+    //             </ul>
+    //           ) : (
+    //             <p>No texts to review</p>
+    //           )}
+    //         </div>
+    //       )}
+    //         <div className="reviewed-texts-container">
+    //           <h2 className="section-heading">Reviewed Texts</h2>
+    //           {reviewedTexts.length > 0 ? (
+    //             <ul className="text-list">
+    //               {reviewedTexts.map((text) => (
+    //                 <li key={text.id} className="text-item">
+    //                   <p className="text-content">{text.content}</p>
+    //                   {data.role === 'ADMIN' && (
+    //                     <button onClick={() => handleDelete(text.id)} className="delete-button">
+    //                       Delete
+    //                     </button>
+    //                   )}
+    //                 </li>
+    //               ))}
+    //             </ul>
+    //           ) : (
+    //             <p>No reviewed texts</p>
+    //           )}
+    //         </div>
+    //       </div>
+    //     </div>
+    //   );
+    // }	
+    // return (
+    //     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+    //       <h1>User Page</h1>
+    //       {/* Add your UserPage content */}
+    //       <p>{data.role}</p>
+      
+    //       <div>
+    //         <button onClick={handleLogout}>Logout</button>
+    //       </div>
+    //       <form onSubmit={handleNewTextSubmit}>
+    //         <input
+    //           type="text"
+    //           value={text}
+    //           onChange={(e) => setText(e.target.value)}
+    //           placeholder="Enter text"
+    //         />
+    //         <button type="submit">Submit</button>
+    //       </form>
+    //       <div style={{ display: 'flex', gap: '20px' }}>
+    //         <div>
+    //           <h2>Texts to Review</h2>
+    //           {textsToReview.length > 0 ? (
+    //             <ul style={{ listStyle: 'none', padding: 0 }}>
+    //               {textsToReview.map((text) => (
+    //                 <li key={text.id} style={{ display: 'flex', alignItems: 'center' }}>
+    //                   <p style={{ marginRight: '10px' }}>{text.content}</p>
+    //                   {(data.role === "ADMIN" || data.role === "MODERATOR") && (
+    //                     <button onClick={() => handleReviewedTextSubmit(text.id, text.content)}>Submit</button>
+    //                   )}
+    //                 </li>
+    //               ))}
+    //             </ul>
+    //           ) : (
+    //             <p>No texts to review</p>
+    //           )}
+    //         </div>
+    //         <div>
+    //           <h2>Reviewed Texts</h2>
+    //           {reviewedTexts.length > 0 ? (
+    //             <ul style={{ listStyle: 'none', padding: 0 }}>
+    //               {reviewedTexts.map((text) => (
+    //                 <li key={text.id} style={{ display: 'flex', alignItems: 'center' }}>
+    //                   <p style={{ marginRight: '10px' }}>{text.content}</p>
+    //                   {data.role === "ADMIN" && (
+    //                     <button onClick={() => handleDelete(text.id)}>Delete</button>
+    //                   )}
+    //                 </li>
+    //               ))}
+    //             </ul>
+    //           ) : (
+    //             <p>No reviewed texts</p>
+    //           )}
+    //         </div>
+    //       </div>
+    //     </div>
+    //   );
+    // }
     //   return (
     //     <div>
     //       <h1>User Page</h1>

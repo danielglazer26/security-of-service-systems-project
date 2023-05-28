@@ -3,6 +3,7 @@ spring:
     url: jdbc:postgresql://localhost:5434/app1-db
     username: app1
     password: password
+    driver-class-name: org.postgresql.Driver
   jpa:
 #    hibernate:
 #      ddl-auto: create
