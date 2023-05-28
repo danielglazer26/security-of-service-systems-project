@@ -1,0 +1,235 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.home-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('cool-background.png'); /* Replace 'your-image-url' with the actual image URL */
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5; /* Adjust the opacity as desired */
+  
+}
+
+.content-container-home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 400px;
+  height: 400px;
+  background-color: rgba(255, 255, 255, 0.8); /* Adjust the background color and opacity as desired */
+  border-radius: 10px;
+  z-index: 1;
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 350px;
+  height: 350px;
+  background-color: rgba(255, 255, 255, 0.8); /* Adjust the background color and opacity as desired */
+  border-radius: 10px;
+  z-index: 1;
+}
+
+.home-title {
+  margin-bottom: 50px;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.sign-in-button,
+.sign-up-button {
+  margin-bottom: 10px;
+  background-color: #4c4b8df1;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  padding-left: 70px;
+  padding-right: 70px;
+  margin: 10px 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.sign-in-button:hover,
+.sign-up-button:hover {
+  opacity: 0.8;
+}
+
+.fixed-title {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f8f8f8; /* Adjust the background color as desired */
+  padding: 10px;
+  text-align: center;
+  font-size: 18px; /* Adjust the font size as desired */
+  font-weight: bold;
+  z-index: 999; /* Ensure the title is displayed above other elements */
+}
+
+.loading {
+  align-items: center;
+}
+
+.user-page-container {
+  background-color: rgba(75, 95, 131, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top: 100px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: auto;
+  flex-wrap: wrap;
+}
+
+.user-page-heading {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.user-role {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.logout-container {
+  margin-bottom: 20px;
+}
+
+.logout-button {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.text-submit-form {
+  margin-bottom: 20px;
+}
+
+.text-input {
+  padding: 8px;
+  margin-right: 10px;
+  width: 300px;
+  font-size: 14px;
+}
+
+.submit-button {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.content-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 10px;
+  /* max-height: auto; */
+  flex-basis: 50%;
+} 
+
+
+.section-heading {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.text-list {
+  list-style: none;
+  padding: 0;
+}
+
+.text-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.text-content {
+  margin-right: 10px;
+}
+
+.review-submit-button {
+  padding: 8px 16px;
+  font-size: 14px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.delete-button {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: red;
+}
+
+.text-review-container,
+.reviewed-texts-container {
+  flex: 1;
+}
+
+
+
+
