@@ -22,6 +22,6 @@ sso:
     base: https://localhost:8080
     authorization: ${sso.url.base}/api/auth/verify
     logout: ${sso.url.base}/api/auth/logout
-    userinfo: ${sso.url.base}/api/auth/user/info
+    userinfo: ${sso.url.base}/key/api/user/info
   api-key: zOn1klp7Srfhz97RHmqu
   api-credential: app2-credential
