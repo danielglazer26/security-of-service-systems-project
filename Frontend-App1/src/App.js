@@ -13,6 +13,23 @@ const App = () => {
   const USER_INFO_URL = "api/user/info";
 
   useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        // Page is visible, perform reload or any other actions
+        window.location.reload();
+      }
+    };
+
+    // Add event listener for visibility change
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
+
+  useEffect(() => {
     // Send GET request using Axios
     axios
     .get(USER_INFO_URL, { withCredentials: true })

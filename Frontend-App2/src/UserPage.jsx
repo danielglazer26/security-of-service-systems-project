@@ -7,7 +7,6 @@ const UserPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { data } = location.state;
-
     const LOGOUT_URL =  "api/auth/logout";
 
     // Logout
@@ -21,21 +20,7 @@ const UserPage = () => {
         }
       };
 
-      
-  //   return (
-  //     <div className="user-page-container">
-  //       <h1 className="user-page-heading">User Page</h1>
-  //       <p className="user-role">Username: {data.user}</p>
-  //       <p className="user-role">Email: {data.email}</p>
-  //       <p className="user-role">Role: {data.role}</p>
-  //       <div className="logout-container">
-  //         <button className="logout-button" onClick={handleLogout}>
-  //           Logout
-  //         </button>
-  //       </div>
-  //     </div>
-  //   );
-  // }    
+
 
   return (
     <div className="user-page-container">

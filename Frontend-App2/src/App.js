@@ -2,7 +2,7 @@ import './App.css';
 import React, { useEffect, useState } from 'react';
 import { Home } from './Home';
 import UserPage from './UserPage';
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate} from "react-router-dom";
 import axios from './api/axios';
 
 
@@ -10,6 +10,23 @@ const App = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const USER_INFO_URL = "api/user/info";
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        // Page is visible, perform reload or any other actions
+        window.location.reload();
+      }
+    };
+
+    // Add event listener for visibility change
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
 
   useEffect(() => {
     // Send GET request using Axios
