@@ -1,8 +1,7 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
 import { Home } from './Home';
-// import UserPage from './UserPage';
-import UserPage from './UserPage2';
+import UserPage from './UserPage';
 import { Routes, Route, useNavigate } from "react-router-dom";
 import axios from './api/axios';
 
@@ -37,7 +36,7 @@ if (isLoading) {
 }  
 return (
     <div className="App">
-      <p className="fixed-title">Client App 01</p>
+      <p className="fixed-title">Client App 02</p>
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/userpage" element={<UserPage />} />
@@ -47,17 +46,3 @@ return (
 };
 
 export default App;
-
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <p id="title">Client App 01</p>  
-//       <Routes>
-//         <Route path="/home" element={<Home />} />
-//         <Route path="/userpage" element={<UserPage />} />
-//       </Routes>
-//     </div>
-//   );  
-// }
-// export default App;

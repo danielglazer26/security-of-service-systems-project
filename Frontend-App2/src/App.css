@@ -65,7 +65,7 @@
   justify-content: center;
   width: 400px;
   height: 400px;
-  background-color: rgba(255, 255, 255, 0.8); /* Adjust the background color and opacity as desired */
+  background-color: rgba(255, 255, 255, 0.5); /* Adjust the background color and opacity as desired */
   border-radius: 10px;
   z-index: 1;
 }
@@ -84,6 +84,7 @@
 
 .home-title {
   margin-bottom: 50px;
+  color: #151455f1;
 }
 
 .button-container {
@@ -116,12 +117,13 @@
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #f8f8f8; /* Adjust the background color as desired */
+  background-color: #f8f8f8; 
+  color: #151455f1;
   padding: 10px;
   text-align: center;
-  font-size: 18px; /* Adjust the font size as desired */
+  font-size: 18px; 
   font-weight: bold;
-  z-index: 999; /* Ensure the title is displayed above other elements */
+  z-index: 999; 
 }
 
 .loading {
@@ -129,15 +131,15 @@
 }
 
 .user-page-container {
-  background-color: rgba(75, 95, 131, 0.5);
+  background-color: rgba(255, 107, 112, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   font-family: Arial, sans-serif;
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
-  margin-top: 100px;
+  margin-top: 150px;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -149,11 +151,19 @@
 .user-page-heading {
   text-align: center;
   margin-bottom: 20px;
+  color: #B7257F;
+  font-size: 40px;
 }
 
 .user-role {
   text-align: center;
-  margin-bottom: 10px;
+  margin: 25;
+  font-size: 25px;
+}
+
+.user-role strong {
+  font-weight: bold;
+  font-size: 28px;
 }
 
 .logout-container {
@@ -161,8 +171,17 @@
 }
 
 .logout-button {
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: 8px 50px;
+  font-size: 20px;
+  margin-top: 40px;
+  background-color: #FF5093;
+  color :white;
+  font-weight:500;
+  border-color: #B7257F;
+}
+
+.logout-button:hover {
+  opacity: 0.8;
 }
 
 .text-submit-form {
@@ -229,6 +248,8 @@
 .reviewed-texts-container {
   flex: 1;
 }
+
+
 
 
 
