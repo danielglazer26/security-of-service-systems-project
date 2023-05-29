@@ -164,7 +164,7 @@ const UserPage = () => {
     return (
       <div className="user-page-container">
         <h1 className="user-page-heading">User Page</h1>
-        <p className="user-role">{data.role}</p>
+        <p className="user-role">{data.role}: {data.user}</p>
     
         <div className="logout-container">
           <button className="logout-button" onClick={handleLogout}>
