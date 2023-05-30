@@ -1,14 +1,14 @@
 package bednarz.glazer.sakowicz.backendapp1.text;
 
-import bednarz.glazer.sakowicz.backendapp1.requests.BodyRequestType;
-import bednarz.glazer.sakowicz.backendapp1.requests.RequestFactory;
 import bednarz.glazer.sakowicz.backendapp1.text.dto.NewTextDto;
 import bednarz.glazer.sakowicz.backendapp1.text.dto.TextDto;
 import bednarz.glazer.sakowicz.backendapp1.text.dto.TextReviewDto;
 import bednarz.glazer.sakowicz.backendapp1.text.exception.TextNotFoundException;
-import bednarz.glazer.sakowicz.backendapp1.userinfo.Role;
-import bednarz.glazer.sakowicz.backendapp1.userinfo.UserInfo;
-import bednarz.glazer.sakowicz.backendapp1.userinfo.UserInfoRequest;
+import bednarz.glazer.sakowicz.ssolib.requests.BodyRequestType;
+import bednarz.glazer.sakowicz.ssolib.requests.RequestFactory;
+import bednarz.glazer.sakowicz.ssolib.userinfo.Role;
+import bednarz.glazer.sakowicz.ssolib.userinfo.UserInfo;
+import bednarz.glazer.sakowicz.ssolib.userinfo.UserInfoRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.RequestEntity;

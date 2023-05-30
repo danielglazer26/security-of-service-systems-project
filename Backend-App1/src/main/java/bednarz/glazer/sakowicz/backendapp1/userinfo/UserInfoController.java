@@ -1,5 +1,6 @@
 package bednarz.glazer.sakowicz.backendapp1.userinfo;
 
+import bednarz.glazer.sakowicz.ssolib.userinfo.UserInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;

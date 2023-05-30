@@ -1,4 +1,4 @@
-package bednarz.glazer.sakowicz.backendapp2.userinfo;
+package bednarz.glazer.sakowicz.ssolib.userinfo;
 
 import java.util.List;
 

@@ -3,7 +3,7 @@ package bednarz.glazer.sakowicz.sso.system.database.services;
 
 import bednarz.glazer.sakowicz.sso.system.database.model.ApplicationRole;
 import bednarz.glazer.sakowicz.sso.system.database.model.Person;
-import bednarz.glazer.sakowicz.sso.system.database.model.Roles;
+import bednarz.glazer.sakowicz.ssolib.userinfo.Role;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,7 +31,7 @@ public class AccountData implements UserDetails {
                         person.getRoles().stream()
                                 .filter(applicationRoles -> applicationRoles.getApplicationName().equals(serverName))
                                 .findFirst()
-                                .orElse(new ApplicationRole(Roles.USER, serverName)).getRole().name()
+                                .orElse(new ApplicationRole(Role.USER, serverName)).getRole().name()
                 )
         );
     }

@@ -1,5 +1,6 @@
 package bednarz.glazer.sakowicz.backendapp2.configuration;
 
+import bednarz.glazer.sakowicz.ssolib.configuration.JwtRequestFilter;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

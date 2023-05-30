@@ -1,4 +1,4 @@
-package bednarz.glazer.sakowicz.backendapp1.requests;
+package bednarz.glazer.sakowicz.ssolib.requests;
 
 public enum HeaderRequestType {
     AUTHORIZATION, LOGOUT
