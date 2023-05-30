@@ -4,7 +4,7 @@ import bednarz.glazer.sakowicz.backendapp1.text.dto.NewTextDto;
 import bednarz.glazer.sakowicz.backendapp1.text.dto.TextDto;
 import bednarz.glazer.sakowicz.backendapp1.text.dto.TextReviewDto;
 import bednarz.glazer.sakowicz.backendapp1.text.exception.TextNotFoundException;
-import bednarz.glazer.sakowicz.backendapp1.userinfo.UserInfo;
+import bednarz.glazer.sakowicz.ssolib.userinfo.UserInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

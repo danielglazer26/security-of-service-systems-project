@@ -1,7 +1,7 @@
 package bednarz.glazer.sakowicz.backendapp1.auth;
 
-import bednarz.glazer.sakowicz.backendapp1.requests.HeaderRequestType;
-import bednarz.glazer.sakowicz.backendapp1.requests.RequestFactory;
+import bednarz.glazer.sakowicz.ssolib.requests.HeaderRequestType;
+import bednarz.glazer.sakowicz.ssolib.requests.RequestFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.RequestEntity;

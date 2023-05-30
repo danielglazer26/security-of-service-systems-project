@@ -1,5 +1,6 @@
 package bednarz.glazer.sakowicz.sso.system.database.model;
 
+import bednarz.glazer.sakowicz.ssolib.userinfo.UserInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;

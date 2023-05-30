@@ -1,4 +1,4 @@
-package bednarz.glazer.sakowicz.backendapp2.requests;
+package bednarz.glazer.sakowicz.ssolib.requests;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;

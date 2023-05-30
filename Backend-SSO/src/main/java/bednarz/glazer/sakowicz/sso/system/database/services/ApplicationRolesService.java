@@ -1,8 +1,8 @@
 package bednarz.glazer.sakowicz.sso.system.database.services;
 
 import bednarz.glazer.sakowicz.sso.system.database.model.ApplicationRole;
-import bednarz.glazer.sakowicz.sso.system.database.model.Roles;
 import bednarz.glazer.sakowicz.sso.system.database.repositories.ApplicationRolesRepository;
+import bednarz.glazer.sakowicz.ssolib.userinfo.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class ApplicationRolesService {
         this.rolesRepository = rolesRepository;
     }
 
-    public boolean checkIfApplicationRoleExists(Roles roles, String applicationName) {
+    public boolean checkIfApplicationRoleExists(Role roles, String applicationName) {
         return rolesRepository.existsByRoleAndApplicationName(roles, applicationName);
     }
 
@@ -31,11 +31,11 @@ public class ApplicationRolesService {
         return rolesRepository.findAllByApplicationName(applicationName);
     }
 
-    public List<ApplicationRole> getRolesForApplication(Roles role) {
+    public List<ApplicationRole> getRolesForApplication(Role role) {
         return rolesRepository.findAllByRole(role);
     }
 
-    public Optional<ApplicationRole> getRolesForApplication(Roles roles, String applicationName) {
+    public Optional<ApplicationRole> getRolesForApplication(Role roles, String applicationName) {
         return rolesRepository.findByRoleAndApplicationName(roles, applicationName);
     }
 }

@@ -1,9 +1,9 @@
 package bednarz.glazer.sakowicz.sso.system.controller;
 
-import bednarz.glazer.sakowicz.sso.system.controller.requests.UserInfoRequest;
 import bednarz.glazer.sakowicz.sso.system.database.model.Person;
 import bednarz.glazer.sakowicz.sso.system.database.services.PersonService;
 import bednarz.glazer.sakowicz.sso.system.settings.connection.jwt.ApiKeysConfiguration;
+import bednarz.glazer.sakowicz.ssolib.userinfo.UserInfoRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;

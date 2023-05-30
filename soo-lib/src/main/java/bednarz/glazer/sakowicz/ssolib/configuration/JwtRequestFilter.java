@@ -1,10 +1,10 @@
-package bednarz.glazer.sakowicz.backendapp2.configuration;
+package bednarz.glazer.sakowicz.ssolib.configuration;
 
-import bednarz.glazer.sakowicz.backendapp2.requests.BodyRequestType;
-import bednarz.glazer.sakowicz.backendapp2.requests.HeaderRequestType;
-import bednarz.glazer.sakowicz.backendapp2.requests.RequestFactory;
-import bednarz.glazer.sakowicz.backendapp2.userinfo.UserInfo;
-import bednarz.glazer.sakowicz.backendapp2.userinfo.UserInfoRequest;
+import bednarz.glazer.sakowicz.ssolib.requests.BodyRequestType;
+import bednarz.glazer.sakowicz.ssolib.requests.HeaderRequestType;
+import bednarz.glazer.sakowicz.ssolib.requests.RequestFactory;
+import bednarz.glazer.sakowicz.ssolib.userinfo.UserInfo;
+import bednarz.glazer.sakowicz.ssolib.userinfo.UserInfoRequest;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,14 +36,17 @@ import static java.util.Collections.singletonList;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final RequestFactory requestFactory;
+
     private final RestTemplate restTemplate;
 
     @Override
-    protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response,
+    protected void doFilterInternal(@NotNull HttpServletRequest request,
+                                    @NotNull HttpServletResponse response,
                                     @NotNull FilterChain filterChain)
             throws ServletException, IOException {
 
-        RequestEntity<Void> verifyRequest = requestFactory.buildGetRequest(HeaderRequestType.AUTHORIZATION, request).build();
+        RequestEntity<Void> verifyRequest =
+                requestFactory.buildGetRequest(HeaderRequestType.AUTHORIZATION, request).build();
 
         ResponseEntity<Long> verifyResponse;
 

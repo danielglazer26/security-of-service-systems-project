@@ -1,4 +1,4 @@
-package bednarz.glazer.sakowicz.backendapp1.configuration;
+package bednarz.glazer.sakowicz.ssolib.configuration;
 
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.web.server.Ssl;

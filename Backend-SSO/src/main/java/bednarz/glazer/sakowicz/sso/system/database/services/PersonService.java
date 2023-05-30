@@ -4,8 +4,8 @@ package bednarz.glazer.sakowicz.sso.system.database.services;
 import bednarz.glazer.sakowicz.sso.system.controller.requests.RegisterRequest;
 import bednarz.glazer.sakowicz.sso.system.database.model.ApplicationRole;
 import bednarz.glazer.sakowicz.sso.system.database.model.Person;
-import bednarz.glazer.sakowicz.sso.system.database.model.Roles;
 import bednarz.glazer.sakowicz.sso.system.database.repositories.PersonRepository;
+import bednarz.glazer.sakowicz.ssolib.userinfo.Role;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -36,7 +36,7 @@ public class PersonService {
     public Optional<Person> createNewPerson(String username, String password, String email) {
         Optional<Person> optionalPerson = personRepository.findByUsername(username);
         if (optionalPerson.isEmpty()) {
-            return Optional.of(savePerson(username, password, email, rolesService.getRolesForApplication(Roles.USER)));
+            return Optional.of(savePerson(username, password, email, rolesService.getRolesForApplication(Role.USER)));
         } else {
             return Optional.empty();
         }
